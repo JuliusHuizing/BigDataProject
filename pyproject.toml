@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "bd-project"
+version = "0.1.0"
+description = ""
+authors = ["Julius <jbhuizing@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+ipykernel = "^6.29.3"
+pandas = "^2.2.1"
+pyspark = "^3.5.1"
+setuptools = "^69.1.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
