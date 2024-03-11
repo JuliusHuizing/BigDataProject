@@ -2,7 +2,9 @@
 
 ## Install dependencies:
 
-If you do not have poetry alread, install [poetry](https://python-poetry.org/docs/)
+for MacOS users, ensure you donwload and install the arm version of java8: https://www.java.com/en/download/
+
+If you do not have poetry alread, install [poetry](https://python-poetry.org/docs/).
 
 ```bash
 # install dependencies defined in pyproject.toml
@@ -11,6 +13,8 @@ poetry install
 poetry shell
 
 ```
+
+
 
 ## Add dependencies:
 ```bash
