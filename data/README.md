@@ -32,3 +32,9 @@ We provide validation and test data as input for the submissions. This data has 
 
 | product_id | product_parent | product_title | vine | verified_purchase | review_headline | review_body | review_date | marketplace_id | product_category_id |
 |---|---|---|---|---|---|---|---|---|---|
+
+
+
+# TODO:
+
+
