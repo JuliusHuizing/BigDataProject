@@ -39,6 +39,32 @@ class DataSet(Enum):
             return []
         
         return result
+    
+    def get_fields(self) -> list:
+        result = [
+            # although ids are not in specified as column in csv, they are there. So ignore the runtime warnings there.
+            StructField("id", IntegerType(), True), 
+            StructField("product_id", StringType(), True),
+            StructField("product_parent", IntegerType(), True),
+            StructField("product_title", StringType(), True),
+            StructField("vine", StringType(), True),
+            StructField("verified_purchase", StringType(), True),
+            StructField("review_headline", StringType(), True),
+            StructField("review_body", StringType(), True),
+            StructField("review_date", StringType(), True),
+            StructField("marketplace_id", IntegerType(), True),
+            StructField("product_category_id", IntegerType(), True),
+        ]
+        match self:
+            case DataSet.TRAIN:
+                result.append(StructField("label", StringType(), True))
+            case DataSet.VALIDATION:
+                pass
+            case DataSet.TEST:
+                pass
+            case _:
+                pass
+        return result
         
          
         
@@ -55,20 +81,10 @@ class DataLoader:
         self._clean_data()
             
     def _create_schema(self):
-        self.schema = StructType([
-            StructField("id", IntegerType(), True),
-            StructField("product_id", StringType(), True),
-            StructField("product_parent", IntegerType(), True),
-            StructField("product_title", StringType(), True),
-            StructField("vine", StringType(), True),
-            StructField("verified_purchase", StringType(), True),
-            StructField("review_headline", StringType(), True),
-            StructField("review_body", StringType(), True),
-            StructField("review_date", StringType(), True),
-            StructField("marketplace_id", IntegerType(), True),
-            StructField("product_category_id", IntegerType(), True),
-            StructField("label", StringType(), True)
-        ])
+        struct_fields = self.data_set.get_fields()
+        self.schema = StructType(
+            struct_fields
+        )
         
     def _load_data(self):
         # List of file paths for training data
@@ -95,17 +111,18 @@ class DataLoader:
         # Ensuring categorical values can only have correct values
         self.df = self.df.withColumn("vine", when(self.df["vine"].isin('Y', 'N'), self.df["vine"]).otherwise(None))
         self.df = self.df.withColumn("verified_purchase", when(self.df["verified_purchase"].isin('Y', 'N'), self.df["verified_purchase"]).otherwise(None))
-        self.df = self.df.withColumn("label", when(self.df["label"].isin('True', 'False'), self.df["label"]).otherwise(None))
+        if self.data_set == DataSet.TRAIN:
+            self.df = self.df.withColumn("label", when(self.df["label"].isin('True', 'False'), self.df["label"]).otherwise(None))
         
         # Select columns with categorical values
-        columns_to_check = ["vine", "verified_purchase", "label"]
+        
+        columns_to_check = ["vine", "verified_purchase", "label"] if self.data_set == DataSet.TRAIN else ["vine", "verified_purchase"]
 
         # Remove rows where specified columns contain null or NaN values
-        self.df = self.df.filter(
-            (col(columns_to_check[0]).isNotNull()) &
-            (col(columns_to_check[1]).isNotNull()) &
-            (col(columns_to_check[2]).isNotNull())
-        )
+        for column in columns_to_check:
+            self.df = self.df.filter(col(column).isNotNull())
+            
+    
         
         
     
