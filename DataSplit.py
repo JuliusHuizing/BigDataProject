@@ -13,13 +13,15 @@ import pandas as pd
 import os
 from enum import Enum
 
+from Config import Config
+
 class DataSplit(Enum):
     TRAIN = 1
     VALIDATION = 2
     TEST = 3
     
     def get_file_paths(self) -> list:
-        base_path = 'data/'
+        base_path = Config.DATA_PATH
         result = []
         if self == DataSplit.TRAIN:
             # append all files that start with 'train'
@@ -27,9 +29,9 @@ class DataSplit(Enum):
                 if file.startswith('train'):
                     result.append(base_path + file)
         elif self == DataSplit.VALIDATION:
-            result.append(f'{base_path}validation_hidden.csv')
+            result.append(f'{base_path}{Config.VALIDATION_DATASET_NAME}')
         elif self == DataSplit.TEST:
-            result.append(f'{base_path}test_hidden.csv')
+            result.append(f'{base_path}{Config.TEST_DATASET_NAME}')
         else:
             print("invalid data type")
             return []
@@ -37,30 +39,15 @@ class DataSplit(Enum):
         return result
     
     def get_fields(self) -> list:
-        result = [
-            # although ids are not in specified as column in csv, they are there. So ignore the runtime warnings there.
-            StructField("", IntegerType(), True), 
-            StructField("product_id", StringType(), True),
-            StructField("product_parent", IntegerType(), True),
-            StructField("product_title", StringType(), True),
-            StructField("vine", StringType(), True),
-            StructField("verified_purchase", StringType(), True),
-            StructField("review_headline", StringType(), True),
-            StructField("review_body", StringType(), True),
-            StructField("review_date", StringType(), True),
-            StructField("marketplace_id", IntegerType(), True),
-            StructField("product_category_id", IntegerType(), True),
-        ]
         match self:
             case DataSplit.TRAIN:
-                result.append(StructField("label", StringType(), True))
+                return Config.TRAIN_SCHEMA
             case DataSplit.VALIDATION:
-                pass
+                return Config.VALIDATION_SCHEMA
             case DataSplit.TEST:
-                pass
+                return Config.TEST_SCHEMA
             case _:
                 pass
-        return result
         
 # wrapper class for the dataset
 # acompany dataframe with split to ensure that the data is not used in the wrong context        

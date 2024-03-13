@@ -45,31 +45,8 @@ class DataLoader:
         merged_df = reduce(DataFrame.unionByName, dfs)
         self.df = merged_df
         return DataSet(self.df, self.split)
-        # print(type(self.df))
         
-    # def _clean_data(self):
-    #     self._remove_duplicate_rows()
-    #     self._drop_dirty_data()
-        
-    # def _remove_duplicate_rows(self):
-    #     # Delete duplicate rows
-    #     duplicate_rows = self.df.count() - self.df.dropDuplicates().count()
-    #     self.df.dropDuplicates()
-    #     print(f"Removed {duplicate_rows} duplicate rows.")
-        
-    # def _drop_dirty_data(self):
-    #     # The predictions should always have the same number of records as the original data, so we only drop dirty data from the training set
-    #     if self.data_set == DataSplit.TRAIN:
-    #         # Ensuring categorical values can only have correct values
-    #         self.df = self.df.withColumn("vine", when(self.df["vine"].isin('Y', 'N'), self.df["vine"]).otherwise(None))
-    #         self.df = self.df.withColumn("verified_purchase", when(self.df["verified_purchase"].isin('Y', 'N'), self.df["verified_purchase"]).otherwise(None))
-    #         self.df = self.df.withColumn("label", when(self.df["label"].isin('True', 'False'), self.df["label"]).otherwise(None))
-            
-    #         # Select columns with categorical values
-    #         columns_to_check = ["vine", "verified_purchase", "label"]
-    #         # Remove rows where specified columns contain null or NaN values
-    #         for column in columns_to_check:
-    #             self.df = self.df.filter(col(column).isNotNull())
+  
             
     
         

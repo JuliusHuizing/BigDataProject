@@ -16,36 +16,33 @@ import os
 
 
 class DataCleaner:
-    def __init__(self, dataset: DataSet):
-        self.data = dataset
-        self.data = self.clean_data()
-        
-
-    def clean_data(self) -> DataSet:
-        if self.data.split != DataSplit.TRAIN:
+    @staticmethod
+    def clean_data(data: DataSet) -> DataSet:
+        if data.split != DataSplit.TRAIN:
             logging.warning("Potentially dropping data from non-training set. This is not recommended.")
-        self._remove_duplicate_rows()
-        self._drop_dirty_data()
-        return self.data
+        data = DataCleaner.remove_duplicate_rows(data)
+        data = DataCleaner.drop_dirty_data(data)
+        return data
         
-    def _remove_duplicate_rows(self):
+    @staticmethod
+    def remove_duplicate_rows(data: DataSet) -> DataSet:
         # Delete duplicate rows
-        duplicate_rows = self.data.df.count() - self.data.df.dropDuplicates().count()
-        self.data.df.dropDuplicates()
+        duplicate_rows = data.df.count() - data.df.dropDuplicates().count()
         print(f"Removed {duplicate_rows} duplicate rows.")
-        
-    def _drop_dirty_data(self):
+        return data
+       
+    @staticmethod 
+    def drop_dirty_data(data: DataSet) -> DataSet:
         # The predictions should always have the same number of records as the original data, so we only drop dirty data from the training set
         
-            
         # Ensuring categorical values can only have correct values
-        self.data.df = self.data.df.withColumn("vine", when(self.data.df["vine"].isin('Y', 'N'), self.data.df["vine"]).otherwise(None))
-        self.data.df = self.data.df.withColumn("verified_purchase", when(self.data.df["verified_purchase"].isin('Y', 'N'), self.data.df["verified_purchase"]).otherwise(None))
-        self.data.df = self.data.df.withColumn("label", when(self.data.df["label"].isin('True', 'False'), self.data.df["label"]).otherwise(None))
+        data.df = data.df.withColumn("vine", when(data.df["vine"].isin('Y', 'N'), data.df["vine"]).otherwise(None))
+        data.df = data.df.withColumn("verified_purchase", when(data.df["verified_purchase"].isin('Y', 'N'), data.df["verified_purchase"]).otherwise(None))
+        data.df = data.df.withColumn("label", when(data.df["label"].isin('True', 'False'), data.df["label"]).otherwise(None))
         
         # Select columns with categorical values
         columns_to_check = ["vine", "verified_purchase", "label"]
         # Remove rows where specified columns contain null or NaN values
         for column in columns_to_check:
-            self.df = self.df.filter(col(column).isNotNull())
+            data.df = data.df.filter(col(column).isNotNull())
             
