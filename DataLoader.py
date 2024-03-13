@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 from enum import Enum
-from DataSetEnum import DataSet
+from DataSplit import DataSplit, DataSet
 
 
 # os.environ['PYSPARK_SUBMIT_ARGS'] = "--master mymaster --total-executor 2 --conf 'spark.driver.extraJavaOptions=-Dhttp.proxyHost=proxy.mycorp.com-Dhttp.proxyPort=1234' -Dhttp.nonProxyHosts=localhost|.mycorp.com|127.0.0.1 -Dhttps.proxyHost=proxy.mycorp.com -Dhttps.proxyPort=1234 -Dhttps.nonProxyHosts=localhost|.mycorp.com|127.0.0.1 pyspark-shell"
@@ -16,25 +16,27 @@ import os
 
 
 class DataLoader:
-    def __init__(self, data_set: DataSet):
+    def __init__(self, split: DataSplit):
         # Create a SparkSession
+        self.split = split
         self.spark = SparkSession.builder \
             .appName("ProductReviews") \
             .getOrCreate()
-        self.data_set = data_set
         self._create_schema()
-        self._load_data()
-        self._clean_data()
+        self.data = self.load_data()
+        # self.df = self._load_data(split)
+        # self._load_data()
+        # self._clean_data()
             
     def _create_schema(self):
-        struct_fields = self.data_set.get_fields()
+        struct_fields = self.split.get_fields()
         self.schema = StructType(
             struct_fields
         )
         
-    def _load_data(self):
+    def load_data(self) -> DataSet:
         # List of file paths for training data
-        file_names = self.data_set.get_file_paths()
+        file_names = self.split.get_file_paths()
 
         # Read each CSV file into a PySpark DataFrame
         dfs = [self.spark.read.csv(file, header=True, schema=self.schema) for file in file_names]
@@ -42,30 +44,9 @@ class DataLoader:
         # Merge all DataFrames into one
         merged_df = reduce(DataFrame.unionByName, dfs)
         self.df = merged_df
+        return DataSet(self.df, self.split)
         
-    def _clean_data(self):
-        self._remove_duplicate_rows()
-        self._drop_dirty_data()
-        
-    def _remove_duplicate_rows(self):
-        # Delete duplicate rows
-        duplicate_rows = self.df.count() - self.df.dropDuplicates().count()
-        self.df.dropDuplicates()
-        print(f"Removed {duplicate_rows} duplicate rows.")
-        
-    def _drop_dirty_data(self):
-        # The predictions should always have the same number of records as the original data, so we only drop dirty data from the training set
-        if self.data_set == DataSet.TRAIN:
-            # Ensuring categorical values can only have correct values
-            self.df = self.df.withColumn("vine", when(self.df["vine"].isin('Y', 'N'), self.df["vine"]).otherwise(None))
-            self.df = self.df.withColumn("verified_purchase", when(self.df["verified_purchase"].isin('Y', 'N'), self.df["verified_purchase"]).otherwise(None))
-            self.df = self.df.withColumn("label", when(self.df["label"].isin('True', 'False'), self.df["label"]).otherwise(None))
-            
-            # Select columns with categorical values
-            columns_to_check = ["vine", "verified_purchase", "label"]
-            # Remove rows where specified columns contain null or NaN values
-            for column in columns_to_check:
-                self.df = self.df.filter(col(column).isNotNull())
+  
             
     
         
