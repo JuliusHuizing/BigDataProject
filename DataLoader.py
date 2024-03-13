@@ -54,19 +54,18 @@ class DataLoader:
         print(f"Removed {duplicate_rows} duplicate rows.")
         
     def _drop_dirty_data(self):
-        # Ensuring categorical values can only have correct values
-        self.df = self.df.withColumn("vine", when(self.df["vine"].isin('Y', 'N'), self.df["vine"]).otherwise(None))
-        self.df = self.df.withColumn("verified_purchase", when(self.df["verified_purchase"].isin('Y', 'N'), self.df["verified_purchase"]).otherwise(None))
+        # The predictions should always have the same number of records as the original data, so we only drop dirty data from the training set
         if self.data_set == DataSet.TRAIN:
+            # Ensuring categorical values can only have correct values
+            self.df = self.df.withColumn("vine", when(self.df["vine"].isin('Y', 'N'), self.df["vine"]).otherwise(None))
+            self.df = self.df.withColumn("verified_purchase", when(self.df["verified_purchase"].isin('Y', 'N'), self.df["verified_purchase"]).otherwise(None))
             self.df = self.df.withColumn("label", when(self.df["label"].isin('True', 'False'), self.df["label"]).otherwise(None))
-        
-        # Select columns with categorical values
-        
-        columns_to_check = ["vine", "verified_purchase", "label"] if self.data_set == DataSet.TRAIN else ["vine", "verified_purchase"]
-
-        # Remove rows where specified columns contain null or NaN values
-        for column in columns_to_check:
-            self.df = self.df.filter(col(column).isNotNull())
+            
+            # Select columns with categorical values
+            columns_to_check = ["vine", "verified_purchase", "label"]
+            # Remove rows where specified columns contain null or NaN values
+            for column in columns_to_check:
+                self.df = self.df.filter(col(column).isNotNull())
             
     
         

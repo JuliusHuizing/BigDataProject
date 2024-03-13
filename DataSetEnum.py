@@ -39,7 +39,7 @@ class DataSet(Enum):
     def get_fields(self) -> list:
         result = [
             # although ids are not in specified as column in csv, they are there. So ignore the runtime warnings there.
-            StructField("id", IntegerType(), True), 
+            StructField("", IntegerType(), True), 
             StructField("product_id", StringType(), True),
             StructField("product_parent", IntegerType(), True),
             StructField("product_title", StringType(), True),
