@@ -46,3 +46,5 @@ class DataCleaner:
         for column in columns_to_check:
             data.df = data.df.filter(col(column).isNotNull())
             
+        return data
+            
