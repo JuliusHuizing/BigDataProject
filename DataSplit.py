@@ -1,9 +1,4 @@
-import pandas as pd
-import os
-from enum import Enum
-
-
-# os.environ['PYSPARK_SUBMIT_ARGS'] = "--master mymaster --total-executor 2 --conf 'spark.driver.extraJavaOptions=-Dhttp.proxyHost=proxy.mycorp.com-Dhttp.proxyPort=1234' -Dhttp.nonProxyHosts=localhost|.mycorp.com|127.0.0.1 -Dhttps.proxyHost=proxy.mycorp.com -Dhttps.proxyPort=1234 -Dhttps.nonProxyHosts=localhost|.mycorp.com|127.0.0.1 pyspark-shell"
+from pyspark.sql import DataFrame
 from pyspark.sql import SparkSession
 from functools import reduce
 from pyspark.sql import DataFrame
@@ -13,7 +8,12 @@ from pyspark.ml import Pipeline
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType, FloatType
 import os
  
-class DataSet(Enum):
+
+import pandas as pd
+import os
+from enum import Enum
+
+class DataSplit(Enum):
     TRAIN = 1
     VALIDATION = 2
     TEST = 3
@@ -21,14 +21,14 @@ class DataSet(Enum):
     def get_file_paths(self) -> list:
         base_path = 'data/'
         result = []
-        if self == DataSet.TRAIN:
+        if self == DataSplit.TRAIN:
             # append all files that start with 'train'
             for file in os.listdir(base_path):
                 if file.startswith('train'):
                     result.append(base_path + file)
-        elif self == DataSet.VALIDATION:
+        elif self == DataSplit.VALIDATION:
             result.append(f'{base_path}validation_hidden.csv')
-        elif self == DataSet.TEST:
+        elif self == DataSplit.TEST:
             result.append(f'{base_path}test_hidden.csv')
         else:
             print("invalid data type")
@@ -52,15 +52,22 @@ class DataSet(Enum):
             StructField("product_category_id", IntegerType(), True),
         ]
         match self:
-            case DataSet.TRAIN:
+            case DataSplit.TRAIN:
                 result.append(StructField("label", StringType(), True))
-            case DataSet.VALIDATION:
+            case DataSplit.VALIDATION:
                 pass
-            case DataSet.TEST:
+            case DataSplit.TEST:
                 pass
             case _:
                 pass
         return result
         
-         
-        
+# wrapper class for the dataset
+# acompany dataframe with split to ensure that the data is not used in the wrong context        
+class DataSet:
+    
+    def __init__(self, df: DataFrame, split: DataSplit):
+        self.df = df
+        self.split = split
+
+
