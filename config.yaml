@@ -1,0 +1,53 @@
+
+collect: 
+  train: "path/to/train.csv"
+  test: "path/to/test.csv"
+  validation: "path/to/validate.csv"
+
+
+preprocess:
+  # integrate:
+
+  # clean:
+
+      # missing_values: "drop"
+    # encoding: "one_hot"
+    # scaling: "standard"
+ 
+
+  # transform:
+
+  add_features:
+    - module: TextLanguageFeature
+      config:
+        input_column_name: "text_column"
+        output_column_name: "language"
+
+  # reduce:
+
+
+  # split:
+  #   train_size: 0.7
+  #   test_size: 0.2
+  #   validate_size: 0.1
+  #   random_state: 42
+
+
+train:
+
+  model:
+    type: "random_forest"
+    hyperparameters:
+      n_estimators: 100
+      max_depth: 10
+      random_state: 42
+
+
+  save:
+
+evaluate:
+
+predict:
+
+
+
