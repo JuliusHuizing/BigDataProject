@@ -23,7 +23,7 @@ class DataLoader:
             .appName("ProductReviews") \
             .getOrCreate()
         self._create_schema()
-        self.data = self.load_data()
+        # self.data = self.load_data()
         # self.df = self._load_data(split)
         # self._load_data()
         # self._clean_data()
