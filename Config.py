@@ -15,6 +15,8 @@ class Config:
     VALIDATION_PREDICTIONS_NAME = "validation_predictions.csv"
     TEST_PREDICTIONS_NAME = "test_predictions.csv"
     
+    MODEL_PATH = "model"
+    
     TRAIN_SCHEMA = [
         # although ids are not in specified as column in csv, they are there. So ignore the runtime warnings there.
         StructField("id", IntegerType(), True), 
