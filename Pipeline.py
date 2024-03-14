@@ -4,7 +4,7 @@ from DataCleaner import DataCleaner
 from DataAugmenter import DataAugmenter
 from pyspark.sql import DataFrame
 import logging
-class PipeLine:
+class PreProcessingPipeline:
     def __init__(self, split: DataSplit):
         self.split = split
         self.data_loader = DataLoader(split)
