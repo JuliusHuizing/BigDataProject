@@ -1,4 +1,4 @@
-from Preprocessing.PreprocessingModuleProtocol import PreprocessingModule
+from .PreprocessingModuleProtocol import PreprocessingModule
 from pyspark.sql import DataFrame
 from .collection.DataCollectorProtocol import DataCollectorProtocol
 

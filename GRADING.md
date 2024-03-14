@@ -1,5 +1,7 @@
 # Grading - Pipeline Design
 
+https://datascience.stackexchange.com/questions/118627/when-is-the-right-moment-to-split-the-dataset#:~:text=It%27s%20better%20to%20split%20the,applied%20to%20the%20testing%20set.
+
 - [ ] How reusable is your data pipeline?
 - [ ] A well-written ML pipeline should implement a sequence of data processing
 operations to consume the input data, train the model
