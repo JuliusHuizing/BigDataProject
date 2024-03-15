@@ -42,7 +42,7 @@ predict:
     config: 
       data_dir: "data/predict/"
       # we want to keep two dataframes for predictions
-      merge: False
+      merge: False #FIXME: if this is set to true, saving predictions will fail
 
   clean:
     # for the predictions, we might want to use different cleaning steps.
