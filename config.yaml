@@ -6,10 +6,14 @@ collect:
   
 preprocess:
   add_features:
-    - module: TextLanguageFeature
+    - module: TextLengthFeature
       config:
-        input_column_name: "text_column"
-        output_column_name: "language"
+        input_column_name: "review_body"
+        output_column_name: "review_body_length"
+    - module: TextLengthFeature
+      config:
+        input_column_name: "review_headline"
+        output_column_name: "review_headline_length"
 
 train:
   model:
@@ -19,17 +23,18 @@ train:
       train_split: 0.7
       features:
         - "review_body_length"
-        - "review_header_length"
+        - "review_headline_length"
       target: "label"
       save_dir: "model"
       overwrite: True
 
-
-  save:
-
-evaluate:
-
 predict:
+  data_dir:
+    - "data/predict/"
+  predictions_dir:
+    - "predictions/"
+  overwrite: True
+
 
 
 
