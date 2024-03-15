@@ -1,6 +1,6 @@
 
-from Pipelines.Preprocess.PreprocessingPipeline import PreprocessingPipeline
-from Pipelines.Preprocess.PreprocessingConfig import PreprocessingConfig
+from deprecated.PreprocessingPipeline import PreprocessingPipeline
+from deprecated.PreprocessingConfig import PreprocessingConfig
 from Pipelines.Train.TrainPipeline import TrainPipeline
 
 if __name__ == "__main__":

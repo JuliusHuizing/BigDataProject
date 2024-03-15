@@ -25,7 +25,7 @@ def initialize_classes(config):
         if "module" in config and "config" in config:
             module_name = config["module"]
             config = config["config"]
-            print(module_name, config)
+            # print(module_name, config)
             # although we could use importlib, we will use a factory pattern instead
             # because python relative imports are a just a pain.
             module = PreprocessingModuleFactory.create_module(module_name, config)
@@ -57,6 +57,7 @@ if __name__ == "__main__":
     for module in preprocessing_pipeline:
         df = module.process(df)
     model_path = train_pipeline.train(df)
+    # train_pipeline.load_and_evaluate_model()
     
     # # predict
     dfs = predict_data_loader.collect_data()

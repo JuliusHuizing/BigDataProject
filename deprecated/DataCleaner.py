@@ -32,9 +32,7 @@ class DataCleaner:
         return data
        
     @staticmethod 
-    def drop_dirty_data(data: DataSet) -> DataSet:
-        # The predictions should always have the same number of records as the original data, so we only drop dirty data from the training set
-        
+    def drop_dirty_data(data: DataSet) -> DataSet:        
         # Ensuring categorical values can only have correct values
         data.df = data.df.withColumn("vine", when(data.df["vine"].isin('Y', 'N'), data.df["vine"]).otherwise(None))
         data.df = data.df.withColumn("verified_purchase", when(data.df["verified_purchase"].isin('Y', 'N'), data.df["verified_purchase"]).otherwise(None))
