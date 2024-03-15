@@ -10,6 +10,7 @@ from pyspark.ml.feature import Imputer, StringIndexer, OneHotEncoder
 from pyspark.ml import Pipeline
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType, FloatType
 import os
+import logging
  
 
 import pandas as pd
@@ -74,34 +75,41 @@ class DataSet:
 
 
 class DataLoader:
-    def __init__(self, split: DataSplit):
+    def __init__(self, data_dir: str):
         # Create a SparkSession
-        self.split = split
         self.spark = SparkSession.builder \
             .appName("ProductReviews") \
             .getOrCreate()
-        self._create_schema()
+        # self._create_schema()
+        self.data_dir = data_dir
         # self.data = self.load_data()
         # self.df = self._load_data(split)
         # self._load_data()
         # self._clean_data()
             
-    def _create_schema(self):
-        struct_fields = self.split.get_fields()
-        self.schema = StructType(
-            struct_fields
-        )
+    # def _create_schema(self):
+    #     # struct_fields = self.split.get_fields()
+    #     self.schema = StructType(
+    #         struct_fields
+    #     )
         
     def collect_data(self) -> DataFrame:
         # List of file paths for training data
-        file_names = self.split.get_file_paths()
+        files = []
+        for file in os.listdir(self.data_dir):
+            if file.endswith('.csv'):
+                files.append(self.data_dir + file)
+            else:
+                logging.warning(f"File {file} is not a CSV file and will be ignored.")
+        
 
         # Read each CSV file into a PySpark DataFrame
-        dfs = [self.spark.read.csv(file, header=True, schema=self.schema) for file in file_names]
+        dfs = [self.spark.read.csv(file, header=True) for file in files]
 
         # Merge all DataFrames into one
         merged_df = reduce(DataFrame.unionByName, dfs)
         self.df = merged_df
+        # self.df.show()
         return self.df
         
   

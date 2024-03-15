@@ -5,27 +5,30 @@ from pyspark.ml.classification import RandomForestClassifier
 from pyspark.ml.evaluation import BinaryClassificationEvaluator
 import os
 from pyspark.sql import DataFrame
+import logging
 
 class TrainPipeline:
-    def __init__(self, df: DataFrame):
+    def __init__(self, features: list, target: str, train_split: float, save_dir: str, overwrite: bool = False):
         self.spark = SparkSession.builder.appName("RandomForestExample").getOrCreate()
-        self.df = df
-        self.feature_columns = ["review_body_length", "review_header_length"]
-        self.model_path = "model"  # Assuming 'Config.MODEL_PATH' is equivalent to this placeholder
+        self.feature_columns = features
+        self.target = target
+        self.train_split = train_split
+        self.test_split = 1 - train_split
+        self.save_dir = save_dir
     
     def prepare_data(self):
         # Split the data
-        (self.training_data, self.test_data) = self.df.randomSplit([0.7, 0.3])
+        (self.training_data, self.test_data) = self.df.randomSplit([self.train_split, self.test_split])
         
         # Assemble the feature columns into a single feature vector
         self.assembler = VectorAssembler(inputCols=self.feature_columns, outputCol="features")
         
         # If "label" is not a numeric column, convert it to numeric using StringIndexer
-        self.label_indexer = StringIndexer(inputCol="label", outputCol="indexedLabel").fit(self.df)
+        self.label_indexer = StringIndexer(inputCol=self.target, outputCol="indexedTarget").fit(self.df)
 
     def configure_and_train_model(self):
         # Configure the Random Forest model
-        rf = RandomForestClassifier(labelCol="indexedLabel", featuresCol="features", numTrees=10)
+        rf = RandomForestClassifier(labelCol="indexedTarget", featuresCol="features", numTrees=10)
         
         # Chain indexers and forest in a Pipeline
         pipeline = SparkPipeline(stages=[self.label_indexer, self.assembler, rf])
@@ -38,13 +41,17 @@ class TrainPipeline:
 
     def save_model(self):
         # Check if model path exists and delete it if it does
-        if os.path.exists(self.model_path):
-            os.system(f"rm -rf {self.model_path}")
-        self.model.save(self.model_path)
+        if os.path.exists(self.save_dir):
+            if self.overwrite:
+                os.system(f"rm -rf {self.save_dir}")
+            else :
+                logging.warning(f"Model already exists at {self.save_dir}. Use overwrite=True to overwrite it.")
+                return
+        self.model.save(self.save_dir)
     
     def load_and_evaluate_model(self):
         # Load the model
-        model = PipelineModel.load(self.model_path)
+        model = PipelineModel.load(self.save_dir)
         
         # Transform the test data
         predictions = model.transform(self.test_data)
@@ -53,26 +60,16 @@ class TrainPipeline:
         # predictions.select("prediction", "indexedLabel", "features").show(5)
         
         # Evaluate the model
-        evaluator = BinaryClassificationEvaluator(labelCol="indexedLabel")
+        evaluator = BinaryClassificationEvaluator(labelCol="indexedTarget")
         accuracy = evaluator.evaluate(predictions)
         print(f"Accuracy: {accuracy}")
 
-# # Example of using the TrainPipeline class
-# if __name__ == "__main__":
-#     # Initialize SparkSession (this should be done inside the main guard)
-#     spark = SparkSession.builder.appName("TrainPipelineExample").getOrCreate()
-    
-    # Example DataFrame loading/creation
-    # df = spark.read.csv("path/to/your/data.csv", header=True, inferSchema=True)
-    
-    # Initialize the training pipeline with the DataFrame
-    # train_pipeline = TrainPipeline(df)
-    
-    # Prepare data
-    # train_pipeline.prepare_data()
-    
-    # Configure and train the model
-    # train_pipeline.configure_and_train_model()
-    
-    # Load and evaluate the trained model
-    # train_pipeline.load_and_evaluate_model()
+    def process(self, df: DataFrame) -> None:
+        self.df = df
+        self.prepare_data()
+        self.configure_and_train_model()
+        self.save_model()
+        self.load_and_evaluate_model()
+        
+
+       
