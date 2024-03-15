@@ -14,7 +14,16 @@ class TrainPipeline:
         self.target = target
         self.train_split = train_split
         self.test_split = 1 - train_split
+        self.overwrite = overwrite
         self.save_dir = save_dir
+        
+    def train(self, df: DataFrame) -> str:
+        self.df = df
+        self.prepare_data()
+        self.configure_and_train_model()
+        self.save_model()
+        return self.save_dir
+        # self.load_and_evaluate_model()
     
     def prepare_data(self):
         # Split the data

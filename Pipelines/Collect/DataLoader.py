@@ -104,7 +104,22 @@ class DataLoader:
         
 
         # Read each CSV file into a PySpark DataFrame
-        dfs = [self.spark.read.csv(file, header=True) for file in files]
+        TRAIN_SCHEMA = StructType([
+        # although ids are not in specified as column in csv, they are there. So ignore the runtime warnings there.
+        StructField("id", IntegerType(), True), 
+        StructField("product_id", StringType(), True),
+        StructField("product_parent", IntegerType(), True),
+        StructField("product_title", StringType(), True),
+        StructField("vine", StringType(), True),
+        StructField("verified_purchase", StringType(), True),
+        StructField("review_headline", StringType(), True),
+        StructField("review_body", StringType(), True),
+        StructField("review_date", StringType(), True),
+        StructField("marketplace_id", IntegerType(), True),
+        StructField("product_category_id", IntegerType(), True),                
+        StructField("label", StringType(), True)
+    ])
+        dfs = [self.spark.read.csv(file, header=True, schema=TRAIN_SCHEMA) for file in files]
 
         # Merge all DataFrames into one
         merged_df = reduce(DataFrame.unionByName, dfs)

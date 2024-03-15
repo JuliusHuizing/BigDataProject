@@ -5,6 +5,11 @@ collect:
     data_dir: "data/train/"
   
 preprocess:
+  clean:
+    - module: "DropNull"
+      config:
+        columns: ["review_body", "review_headline", "label"]
+
   add_features:
     - module: TextLengthFeature
       config:
@@ -16,7 +21,6 @@ preprocess:
         output_column_name: "review_headline_length"
 
 train:
-  model:
     module: "TrainPipeline"
     config:
       # the portion to be used for trainining (and validation). The rest for testing

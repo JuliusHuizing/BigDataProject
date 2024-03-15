@@ -1,4 +1,6 @@
-from Pipelines.PipelineModuleFactory import PipelineModuleFactory
+from Pipelines.Preprocess.PreprocessingModuleFactory import PreprocessingModuleFactory
+from Pipelines.Collect.DataCollectorFactory import DataCollectorFactory
+from Pipelines.Train.TrainPipelineFactory import TrainPipelineFactory
 import yaml
 
 import yaml
@@ -23,7 +25,7 @@ def initialize_classes(config):
             print(module_name, config)
             # although we could use importlib, we will use a factory pattern instead
             # because python relative imports are a just a pain.
-            module = PipelineModuleFactory.create_module(module_name, config)
+            module = PreprocessingModuleFactory.create_module(module_name, config)
             modules.append(module)
         else:
             # Recursively search for nested configurations
@@ -35,13 +37,15 @@ def initialize_classes(config):
 if __name__ == "__main__":
     # Assuming your YAML file path is 'path/to/your/config.yaml'
     config = load_yaml_file('config.yaml')
-    modules = initialize_classes(config)
-    data_loader = modules[0]
-    rest = modules[1:]
+    data_loader = config["collect"]
+    data_loader = DataCollectorFactory.create_module(config["collect"]["module"], config["collect"]["config"])
+    preprocessing_pipeline = initialize_classes(config["preprocess"])
+    train_pipeline = TrainPipelineFactory.create_module(config["train"]["module"], config["train"]["config"])
+    
     df = data_loader.collect_data()
-    for module in rest:
+    for module in preprocessing_pipeline:
         df = module.process(df)
-    print(df.show())
+    model_path = train_pipeline.train(df)
     
     
     

@@ -20,4 +20,4 @@ class DataCollectorProtocol(Protocol):
     """
     
     def collect_data(self) -> DataFrame:
-        pass
+        ...
