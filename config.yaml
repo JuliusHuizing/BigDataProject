@@ -12,7 +12,6 @@ train:
         columns: ["review_body", "review_headline", "label"]
     
   preprocess:
-  
     add_features:
       - module: TextLengthFeature
         config:

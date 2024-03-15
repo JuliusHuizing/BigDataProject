@@ -1,7 +1,6 @@
 from pyspark.sql import SparkSession
 from pyspark.ml import PipelineModel
 from pyspark.sql.functions import initcap
-from Config import Config
 from ..Preprocess.PreprocessingModuleProtocol import PreprocessingModule
 from pyspark.sql import DataFrame
 import os

@@ -21,29 +21,21 @@ poetry add <dependency_name>
 
 ```
 
+# Train & predict
 
-# Augment:
+The run.py script uses the configuration defined in config.yaml.
 
-To improve training / prediction performance, consider the following steps:
+```bash
+python run.py
+```
 
-1. Add a new data augmentation method to DataAugmenter.py
-2. Make sure to add the new feature to the feature list in the RandomForest algorithm in train.ipynb.
+# Adding a preprocessing step:
 
+Adding a new preprocessing module to the pipeline consists of three steps:
 
-# Train:
-
-The train.ipynb noteboko connects two pipelines to train and save a model:
-
-(1) First, it uses our own pipeline (Pipeline.py) to preprocess the data.
-(2) Then it uses the PySpark's built-in pipeline functionality to transform the features into a feature vector and
-run a RandomForests model on the data to predict the label.
-
-The trained model is saved under the 'model' dir.
+1. Implement the module and ensure it conforms to the PreProcessingModuleProtocol.
+2. Add the model to the PreprocessingModuleFactory so the factory can create the module at runtime.
+3. Add the module to config.yaml
 
 
 
-
-# Predict
-
-Once a model is saved under the 'model' dir, we can run the predict.ipynb notebook to run the model
-on the validation and test set and create the corresponding submission files under the 'predictions' dir.
