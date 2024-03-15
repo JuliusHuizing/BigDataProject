@@ -19,5 +19,7 @@ class DataCollectorProtocol(Protocol):
                   class.
     """
     
+    def __init__(data_dir: str, merge: bool):
+        ...
     def collect_data(self) -> DataFrame:
         ...

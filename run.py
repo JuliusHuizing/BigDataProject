@@ -1,6 +1,8 @@
 from Pipelines.Preprocess.PreprocessingModuleFactory import PreprocessingModuleFactory
 from Pipelines.Collect.DataCollectorFactory import DataCollectorFactory
 from Pipelines.Train.TrainPipelineFactory import TrainPipelineFactory
+from Pipelines.Predict.PredictPipelineFactory import PredictPipelineFactory
+from Pipelines.Predict.PredictPipeline import PredictPipeline
 import yaml
 
 import yaml
@@ -37,15 +39,35 @@ def initialize_classes(config):
 if __name__ == "__main__":
     # Assuming your YAML file path is 'path/to/your/config.yaml'
     config = load_yaml_file('config.yaml')
-    data_loader = config["collect"]
-    data_loader = DataCollectorFactory.create_module(config["collect"]["module"], config["collect"]["config"])
-    preprocessing_pipeline = initialize_classes(config["preprocess"])
-    train_pipeline = TrainPipelineFactory.create_module(config["train"]["module"], config["train"]["config"])
-    
-    df = data_loader.collect_data()
+    train_config = config["train"]
+    data_loader = DataCollectorFactory.create_module(train_config["collect"]["module"], train_config["collect"]["config"])
+    preprocessing_pipeline = initialize_classes(train_config["preprocess"])
+    train_pipeline = TrainPipelineFactory.create_module(train_config["train"]["module"], train_config["train"]["config"])
+
+    predict_config = config["predict"]
+    predict_data_loader = DataCollectorFactory.create_module(predict_config["collect"]["module"], predict_config["collect"]["config"])
+    # predict_pipeline = PredictPipelineFactory.create_module(config["predict"]["module"], config["predict"]["config"])
+
+    # train
+    df = data_loader.collect_data()[0]
     for module in preprocessing_pipeline:
         df = module.process(df)
     model_path = train_pipeline.train(df)
+    
+    # # predict
+    dfs = predict_data_loader.collect_data()
+    predict_pieline = PredictPipeline(model_path)
+    predict_preprocessing_pipeline = initialize_classes(train_config["preprocess"])
+    for idx, df in enumerate(dfs):
+        for module in predict_preprocessing_pipeline:
+            df = module.process(df)
+            
+        predict_pieline.predict(df, results_path=f"predictions{idx}")
+    
+    
+    
+    
+    
     
     
     

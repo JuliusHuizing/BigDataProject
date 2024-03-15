@@ -75,12 +75,13 @@ class DataSet:
 
 
 class DataLoader:
-    def __init__(self, data_dir: str):
+    def __init__(self, data_dir: str, merge: bool):
         # Create a SparkSession
         self.spark = SparkSession.builder \
             .appName("ProductReviews") \
             .getOrCreate()
         # self._create_schema()
+        self.merge = merge
         self.data_dir = data_dir
         # self.data = self.load_data()
         # self.df = self._load_data(split)
@@ -93,7 +94,7 @@ class DataLoader:
     #         struct_fields
     #     )
         
-    def collect_data(self) -> DataFrame:
+    def collect_data(self) -> list[DataFrame]:
         # List of file paths for training data
         files = []
         for file in os.listdir(self.data_dir):
@@ -119,13 +120,12 @@ class DataLoader:
         StructField("product_category_id", IntegerType(), True),                
         StructField("label", StringType(), True)
     ])
-        dfs = [self.spark.read.csv(file, header=True, schema=TRAIN_SCHEMA) for file in files]
-
+        self.dfs = [self.spark.read.csv(file, header=True, schema=TRAIN_SCHEMA) for file in files]
         # Merge all DataFrames into one
-        merged_df = reduce(DataFrame.unionByName, dfs)
-        self.df = merged_df
-        # self.df.show()
-        return self.df
+        if self.merge:
+            merged_df = reduce(DataFrame.unionByName, self.dfs)
+            self.dfs = [merged_df]
+        return self.dfs
         
   
             
