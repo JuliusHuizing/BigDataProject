@@ -43,17 +43,20 @@ if __name__ == "__main__":
     train_config = config["train"]
     data_loader = DataCollectorFactory.create_module(train_config["collect"]["module"], train_config["collect"]["config"])
     preprocessing_pipeline = initialize_classes(train_config["preprocess"])
+    clean_pipeline = initialize_classes(train_config["clean"])
     train_pipeline = TrainPipelineFactory.create_module(train_config["train"]["module"], train_config["train"]["config"])
 
     predict_config = config["predict"]
     predict_data_dir = predict_config["collect"]["config"]["data_dir"]
-    prediction_files = os.listdir(predict_data_dir)
+    prediction_files = [file for file in os.listdir(predict_data_dir) if file != "schema.yaml"]
     predictions_dir = predict_config["save_dir"]
     predict_data_loader = DataCollectorFactory.create_module(predict_config["collect"]["module"], predict_config["collect"]["config"])
     # predict_pipeline = PredictPipelineFactory.create_module(config["predict"]["module"], config["predict"]["config"])
 
     # train
     df = data_loader.collect_data()[0]
+    for module in clean_pipeline:
+        df = module.process(df)
     for module in preprocessing_pipeline:
         df = module.process(df)
     model_path = train_pipeline.train(df)
@@ -66,7 +69,6 @@ if __name__ == "__main__":
     for source_file, df in zip(prediction_files, dfs):
         for module in predict_preprocessing_pipeline:
             df = module.process(df)
-            
         predict_pieline.predict(df, results_path=f"{predictions_dir}preds_{source_file}")
     
     

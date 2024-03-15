@@ -1,5 +1,5 @@
 fields:
-  - name: id
+  - name: ""
     type: IntegerType
     nullable: true
   - name: product_id
@@ -32,6 +32,4 @@ fields:
   - name: product_category_id
     type: IntegerType
     nullable: true
-  - name: label
-    type: StringType
-    nullable: true
+  

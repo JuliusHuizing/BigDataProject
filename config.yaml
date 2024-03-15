@@ -5,15 +5,14 @@ train:
     config: 
       data_dir: "data/train/"
       merge: True
+
+  clean:
+    - module: "DropNull"
+      config:
+        columns: ["review_body", "review_headline", "label"]
     
   preprocess:
-    # The headers here don't matter; they're just for clarity.
-    # Just make sure to always end with a module and a config.
-    clean:
-      - module: "DropNull"
-        config:
-          columns: ["review_body", "review_headline", "label"]
-
+  
     add_features:
       - module: TextLengthFeature
         config:
