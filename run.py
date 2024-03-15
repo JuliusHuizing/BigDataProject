@@ -45,6 +45,7 @@ if __name__ == "__main__":
     train_pipeline = TrainPipelineFactory.create_module(train_config["train"]["module"], train_config["train"]["config"])
 
     predict_config = config["predict"]
+    predictions_dir = predict_config["save_dir"]
     predict_data_loader = DataCollectorFactory.create_module(predict_config["collect"]["module"], predict_config["collect"]["config"])
     # predict_pipeline = PredictPipelineFactory.create_module(config["predict"]["module"], config["predict"]["config"])
 
@@ -62,7 +63,7 @@ if __name__ == "__main__":
         for module in predict_preprocessing_pipeline:
             df = module.process(df)
             
-        predict_pieline.predict(df, results_path=f"predictions{idx}")
+        predict_pieline.predict(df, results_path=f"{predictions_dir}preds_{idx}")
     
     
     

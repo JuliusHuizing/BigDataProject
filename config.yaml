@@ -54,12 +54,9 @@ predict:
   # if left empty, the same preprocessing steps as for the training data will be used
   preprocess:
     
-  predict:
-    module: "PredictPipeline"
-    config:
-      save_dir:
-        - "predictions/"
-      overwrite: True
+  # TODO: handle naming files according to input name...
+  save_dir: "predictions/"
+  overwrite: True
 
 
 
