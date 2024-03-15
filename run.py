@@ -7,6 +7,7 @@ import yaml
 
 import yaml
 import importlib
+import os
 
 def load_yaml_file(file_path):
     with open(file_path, 'r') as file:
@@ -45,6 +46,8 @@ if __name__ == "__main__":
     train_pipeline = TrainPipelineFactory.create_module(train_config["train"]["module"], train_config["train"]["config"])
 
     predict_config = config["predict"]
+    predict_data_dir = predict_config["collect"]["config"]["data_dir"]
+    prediction_files = os.listdir(predict_data_dir)
     predictions_dir = predict_config["save_dir"]
     predict_data_loader = DataCollectorFactory.create_module(predict_config["collect"]["module"], predict_config["collect"]["config"])
     # predict_pipeline = PredictPipelineFactory.create_module(config["predict"]["module"], config["predict"]["config"])
@@ -59,11 +62,11 @@ if __name__ == "__main__":
     dfs = predict_data_loader.collect_data()
     predict_pieline = PredictPipeline(model_path)
     predict_preprocessing_pipeline = initialize_classes(train_config["preprocess"])
-    for idx, df in enumerate(dfs):
+    for source_file, df in zip(prediction_files, dfs):
         for module in predict_preprocessing_pipeline:
             df = module.process(df)
             
-        predict_pieline.predict(df, results_path=f"{predictions_dir}preds_{idx}")
+        predict_pieline.predict(df, results_path=f"{predictions_dir}preds_{source_file}")
     
     
     

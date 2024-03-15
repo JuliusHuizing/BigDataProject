@@ -53,8 +53,7 @@ predict:
 
   # if left empty, the same preprocessing steps as for the training data will be used
   preprocess:
-    
-  # TODO: handle naming files according to input name...
+  # prediction files will be saved with the same name as the input files, prefixed with 'preds_'.  
   save_dir: "predictions/"
   overwrite: True
 
