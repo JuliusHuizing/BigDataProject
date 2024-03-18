@@ -5,7 +5,7 @@ import logging
 
 
 class ConvertToBoolean:
-    def __init__(self, input_column_name: str, output_column_name: str, mapping: dict, non_matches: bool = None):
+    def __init__(self, input_column_name: str, output_column_name: str, mapping: dict, map_non_matches_to: bool = None):
         """
         Initializes the module to convert column values to boolean based on a provided mapping.
 
@@ -18,7 +18,7 @@ class ConvertToBoolean:
         self.input_column_name = input_column_name
         self.output_column_name = output_column_name
         self.mapping = mapping
-        self.non_matches = non_matches
+        self.map_non_matches_to = map_non_matches_to
 
     def process(self, df: DataFrame) -> DataFrame:
         """
@@ -36,7 +36,7 @@ class ConvertToBoolean:
                 return self.mapping[value]
             else:
                 # logging.warning(f"Encountered an unexpected value '{value}' in column '{self.input_column_name}' that is not defined in the mapping. Returning None.")
-                return self.non_matches
+                return self.map_non_matches_to
 
         convert_to_boolean_udf = udf(convert_value, BooleanType())
 

@@ -7,29 +7,19 @@ collect:
 
 preprocess:
   clean:
-    # - module: "DropNull"
-    #   config:
-    #     columns: ["review_body", "review_headline", "label"]
-
-    # - module: DropNotIn
-    #   config:
-    #     input_column_name: "label"
-    #     output_column_name: "label"
-    #     targets: ["True", "False"]
-
     - module: ConvertToBoolean
       config:
         input_column_name: "verified_purchase"
         output_column_name: "verified_purchase"
         mapping: {"Y": True, "N": False}
-        non_matches: False
+        map_non_matches_to: False
 
     - module: ConvertToBoolean
       config:
         input_column_name: "vine"
         output_column_name: "vine"
         mapping: {"Y": True, "N": False}
-        non_matches: False
+        map_non_matches_to: False
 
 
   add_features:
