@@ -31,13 +31,16 @@ if __name__ == "__main__":
         # train
         logging.info("Collecting Data...")
         df = data_loader.collect_data()[0]
+        # original_count = df.count()
         
-        df.groupBy("label").count().show()
         logging.info("✅ Data collected.")
         logging.info("Cleaning Data...")
         for module in preprocessing_pipeline:
             df = module.process(df)
         logging.info("✅ Data Preprocessed.")
+        # new_count = df.count()
+        # num_deleted_rows = original_count - new_count
+        # if num_deleted_rows > 0
         
         logging.info("Checking preprocessed data quality before training...")
             
@@ -53,7 +56,7 @@ if __name__ == "__main__":
         logging.info(f"✅ Model evaluated.")
         
     except Exception as e:
-        logging.error(f" ❌ Error in training pipeline: {e}")
+        logging.error(f" ❌ Error in pipeline: {e}")
         raise e
     
     # train_pipeline.load_and_evaluate_model()

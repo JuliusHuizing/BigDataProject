@@ -7,6 +7,7 @@ import os
 from pyspark.sql import DataFrame
 import logging
 
+
 class TrainPipeline:
     def __init__(self, features: list, target: str, train_split: float, save_dir: str, overwrite: bool = False):
         self.spark = SparkSession.builder.appName("RandomForestExample").getOrCreate()
@@ -71,7 +72,7 @@ class TrainPipeline:
         # Evaluate the model
         evaluator = BinaryClassificationEvaluator(labelCol="indexedTarget")
         accuracy = evaluator.evaluate(predictions)
-        print(f"Accuracy: {accuracy}")
+        print(f"🎯 Accuracy: {accuracy}")
 
     def process(self, df: DataFrame) -> None:
         self.df = df

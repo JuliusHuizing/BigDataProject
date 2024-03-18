@@ -77,7 +77,7 @@ class DataLoader:
             schema_fields.append(StructField(field["name"], field_type, field["nullable"]))
 
         self.schema = StructType(schema_fields)
-        logging.info(f"Schema created: {self.schema}")
+        # logging.info(f"Schema created: {self.schema}")
 
 
 
