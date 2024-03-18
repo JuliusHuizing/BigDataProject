@@ -1,0 +1,66 @@
+collect: 
+  module: "DataLoader"
+  config: 
+    data_dir: "data/train/"
+    merge: True
+
+# note these will not be applied to predict
+preprocess:
+  clean:
+    - module: "DropNull"
+      config:
+        columns: ["review_body", "review_headline", "label"]
+
+    - module: ConvertToBoolean
+      config:
+        input_column_name: "verified_purchase"
+        output_column_name: "verified_purchase"
+        mapping: {"Y": True, "N": False}
+
+  add_features:
+    - module: TextLengthFeature
+      config:
+        input_column_name: "review_body"
+        output_column_name: "review_body_length"
+    - module: TextLengthFeature
+      config:
+        input_column_name: "review_headline"
+        output_column_name: "review_headline_length"
+
+train:
+    module: "TrainPipeline"
+    config:
+      # the portion to be used for trainining (and validation). The rest for testing
+      train_split: 0.7
+      features:
+        - "review_body_length"
+        - "review_headline_length"
+        - "verified_purchase"
+      target: "label"
+      save_dir: "model"
+      overwrite: True
+
+# predict:
+#   collect: 
+#     module: "DataLoader"
+#     config: 
+#       data_dir: "data/predict/"
+#       # we want to keep two dataframes for predictions
+#       merge: False #FIXME: if this is set to true, saving predictions will fail
+
+#   clean:
+#     # for the predictions, we might want to use different cleaning steps.
+#     # e.g. we do not want to drop rows, but instead impute them.
+#     - module: "DropNull"
+#       config:
+#         columns: []
+
+#   # if left empty, the same preprocessing steps as for the training data will be used
+#   preprocess:
+#   # prediction files will be saved with the same name as the input files, prefixed with 'preds_'.  
+#   save_dir: "predictions/"
+#   overwrite: True
+
+
+
+

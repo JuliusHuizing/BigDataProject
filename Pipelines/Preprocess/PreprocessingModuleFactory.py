@@ -4,11 +4,14 @@ from .feature_engineering.TextLengthFeature import TextLengthFeature
 from .feature_engineering.TextSentimentFeature import TextSentimentFeature
 from .PreprocessingModuleProtocol import PreprocessingModule
 from .cleaning.DropNull import DropNull
+from .cleaning.ConvertToBool import ConvertToBoolean
 
 class PreprocessingModuleFactory:
     @staticmethod
     def create_module(module_name: str, module_config: dict) -> PreprocessingModule:
         try:
+            if module_name == "ConvertToBoolean":
+                return ConvertToBoolean(**module_config)
             if module_name == "DropNull":
                 return DropNull(**module_config)
             if module_name == "TextLanguageFeature":
