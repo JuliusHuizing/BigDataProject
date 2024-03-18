@@ -17,6 +17,7 @@ class DropNotIn:
         new_count = df.count()
         diff = original_count - new_count
         if new_count > 0:
-            logging.warning(f" 🟠 dropped {diff}/{original_count} rows.")
+            pass
+            # logging.warning(f" 🟠 dropped {diff}/{original_count} rows.")
         return df 
      

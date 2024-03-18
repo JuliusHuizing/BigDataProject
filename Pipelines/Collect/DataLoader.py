@@ -33,7 +33,7 @@ import logging
 
 
 class DataLoader:
-    def __init__(self, data_dir: str, merge: bool):
+    def __init__(self, data_dir: str, merge: bool, n: int = None):
         # Create a SparkSession
         self.spark = SparkSession.builder \
             .appName("ProductReviews") \
@@ -41,6 +41,7 @@ class DataLoader:
         # self._create_schema()
         self.merge = merge
         self.data_dir = data_dir
+        self.n = n
         self.create_schema()
         
     def collect_data(self) -> list[DataFrame]:
@@ -53,6 +54,11 @@ class DataLoader:
                 if file != "schema.yaml":
                     logging.warning(f"File {file} is not a CSV file and will be ignored.")
         self.dfs = [self.spark.read.csv(file, header=True, schema=self.schema) for file in files]
+        # if n is set, collect subset of data
+        if self.n != None:
+            n = int(self.n/len(self.dfs))
+            self.dfs = [df.limit(n) for df in self.dfs]
+            
         # Merge all DataFrames into one
         if self.merge:
             merged_df = reduce(DataFrame.unionByName, self.dfs)

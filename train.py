@@ -36,7 +36,12 @@ if __name__ == "__main__":
         logging.info("✅ Data collected.")
         logging.info("Cleaning Data...")
         for module in preprocessing_pipeline:
+            original_count = df.count()
             df = module.process(df)
+            cleaned_count = df.count()
+            diff = original_count - cleaned_count
+            if diff > 0:
+                logging.warning(f"🟠 Dropped {diff} rows")
         logging.info("✅ Data Preprocessed.")
         # new_count = df.count()
         # num_deleted_rows = original_count - new_count

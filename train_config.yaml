@@ -3,6 +3,7 @@ collect:
   config: 
     data_dir: "data/train/"
     merge: True
+    n: 1000
 
 # note these will not be applied to predict
 preprocess:
@@ -23,6 +24,12 @@ preprocess:
         output_column_name: "verified_purchase"
         mapping: {"Y": True, "N": False}
 
+    - module: ConvertToBoolean
+      config:
+        input_column_name: "vine"
+        output_column_name: "vine"
+        mapping: {"Y": True, "N": False}
+
   add_features:
     - module: TextLengthFeature
       config:
@@ -32,16 +39,23 @@ preprocess:
       config:
         input_column_name: "review_headline"
         output_column_name: "review_headline_length"
+    # - module: TextSentimentFeature #FIXME: this crashes my laptop atm..
+    #   config:
+    #     input_column_name: "review_body"
+    #     output_column_name: "review_body_sentiment"
+
 
 train:
     module: "TrainPipeline"
     config:
       # the portion to be used for trainining (and validation). The rest for testing
-      train_split: 0.7
+      train_split: 0.99
       features:
         - "review_body_length"
         - "review_headline_length"
         - "verified_purchase"
+        - "vine"
+        # - "review_body_sentiment"
       target: "label"
       save_dir: "model"
       overwrite: True

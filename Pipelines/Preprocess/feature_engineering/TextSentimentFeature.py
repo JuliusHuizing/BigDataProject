@@ -29,7 +29,7 @@ class TextSentimentFeature:
         Returns:
         - A PySpark DataFrame with an additional column for the sentiment score.
         """
-        sentimentAnalyzer = udf(lambda x: self._compute_sentiment(x), FloatType())
+        sentimentAnalyzer = udf(lambda x: self._compute_sentiment(x) if len(x) < 512 else 0, FloatType())
         return data.withColumn(self.output_column_name, sentimentAnalyzer(col(self.input_column_name)))
     
     def _compute_sentiment(self, text: str) -> float:
