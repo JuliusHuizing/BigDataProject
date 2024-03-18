@@ -72,7 +72,7 @@ class TrainPipeline:
         # Evaluate the model
         evaluator = BinaryClassificationEvaluator(labelCol="indexedTarget")
         accuracy = evaluator.evaluate(predictions)
-        print(f"🎯 Accuracy: {accuracy}")
+        logging.info(f"🎯 Model Accuracy: {accuracy}")
 
     def process(self, df: DataFrame) -> None:
         self.df = df

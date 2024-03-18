@@ -48,7 +48,7 @@ train:
     module: "TrainPipeline"
     config:
       # the portion to be used for trainining (and validation). The rest for testing
-      train_split: 0.99
+      train_split: 0.7
       features:
         - "review_body_length"
         - "review_headline_length"
