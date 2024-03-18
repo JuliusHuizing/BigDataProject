@@ -1,3 +1,7 @@
+# Otherwise there will always be merge conflicts:
+model/
+predictions/
+
 # Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,python,jupyternotebooks,macos,windows,linux
 # Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,python,jupyternotebooks,macos,windows,linux
 
