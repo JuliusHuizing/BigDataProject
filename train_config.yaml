@@ -11,6 +11,12 @@ preprocess:
       config:
         columns: ["review_body", "review_headline", "label"]
 
+    - module: DropNotIn
+      config:
+        input_column_name: "label"
+        output_column_name: "label"
+        targets: ["True", "False"]
+
     - module: ConvertToBoolean
       config:
         input_column_name: "verified_purchase"
@@ -39,27 +45,6 @@ train:
       target: "label"
       save_dir: "model"
       overwrite: True
-
-# predict:
-#   collect: 
-#     module: "DataLoader"
-#     config: 
-#       data_dir: "data/predict/"
-#       # we want to keep two dataframes for predictions
-#       merge: False #FIXME: if this is set to true, saving predictions will fail
-
-#   clean:
-#     # for the predictions, we might want to use different cleaning steps.
-#     # e.g. we do not want to drop rows, but instead impute them.
-#     - module: "DropNull"
-#       config:
-#         columns: []
-
-#   # if left empty, the same preprocessing steps as for the training data will be used
-#   preprocess:
-#   # prediction files will be saved with the same name as the input files, prefixed with 'preds_'.  
-#   save_dir: "predictions/"
-#   overwrite: True
 
 
 

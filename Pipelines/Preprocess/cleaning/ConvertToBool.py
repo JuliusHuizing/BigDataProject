@@ -33,12 +33,18 @@ class ConvertToBoolean:
             if value in self.mapping:
                 return self.mapping[value]
             else:
-                logging.warning(f"Encountered an unexpected value '{value}' in column '{self.input_column_name}' that is not defined in the mapping. Returning None.")
+                # logging.warning(f"Encountered an unexpected value '{value}' in column '{self.input_column_name}' that is not defined in the mapping. Returning None.")
                 return None
 
         convert_to_boolean_udf = udf(convert_value, BooleanType())
 
         # Apply the conversion to the specified column
+        original_count = df.count()
         df = df.withColumn(self.output_column_name, convert_to_boolean_udf(col(self.input_column_name)))
-
+        # drop None values
+        df = df.filter(col(self.output_column_name).isNotNull())
+        new_count = df.count()
+        diff = original_count - new_count
+        if diff > 0:
+            logging.warning(f"⚠️ Dropped {diff}/{original_count} rows.")
         return df

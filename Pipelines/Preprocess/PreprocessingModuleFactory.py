@@ -5,11 +5,14 @@ from .feature_engineering.TextSentimentFeature import TextSentimentFeature
 from .PreprocessingModuleProtocol import PreprocessingModule
 from .cleaning.DropNull import DropNull
 from .cleaning.ConvertToBool import ConvertToBoolean
+from .cleaning.DropNotIn import DropNotIn
 
 class PreprocessingModuleFactory:
     @staticmethod
     def create_module(module_name: str, module_config: dict) -> PreprocessingModule:
         try:
+            if module_name == "DropNotIn":
+                return DropNotIn(**module_config)
             if module_name == "ConvertToBoolean":
                 return ConvertToBoolean(**module_config)
             if module_name == "DropNull":

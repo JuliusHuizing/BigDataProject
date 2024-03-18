@@ -1,5 +1,5 @@
 fields:
-  - name: ""
+  - name: "id"
     type: IntegerType
     nullable: true
   - name: product_id

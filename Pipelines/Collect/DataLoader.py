@@ -27,7 +27,7 @@ from pyspark.ml import Pipeline
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType, FloatType
 import os
 
-
+import logging
 
 
 
@@ -77,6 +77,7 @@ class DataLoader:
             schema_fields.append(StructField(field["name"], field_type, field["nullable"]))
 
         self.schema = StructType(schema_fields)
+        logging.info(f"Schema created: {self.schema}")
 
 
 

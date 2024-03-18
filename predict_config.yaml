@@ -1,0 +1,23 @@
+collect: 
+  module: "DataLoader"
+  config: 
+    data_dir: "data/predict/"
+    # we want to keep two dataframes for predictions
+    merge: False #FIXME: if this is set to true, saving predictions will fail
+
+preprocess:
+  clean:
+  - module: "DropNull"
+    config:
+      columns: []
+
+load_model:
+  - model_path: "model"
+
+predict:
+  save_dir: "predictions/"
+  overwrite: True
+
+
+
+
