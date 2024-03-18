@@ -3,9 +3,8 @@ collect:
   config: 
     data_dir: "data/train/"
     merge: True
-    n: 1000
+    # n: 1000 # you can take subset of the data to debug more quickly.
 
-# note these will not be applied to predict
 preprocess:
   clean:
     - module: "DropNull"

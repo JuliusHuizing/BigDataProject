@@ -5,7 +5,7 @@ import logging
 
 
 class ConvertToBoolean:
-    def __init__(self, input_column_name: str, output_column_name: str, mapping: dict):
+    def __init__(self, input_column_name: str, output_column_name: str, mapping: dict, non_matches: bool = None):
         """
         Initializes the module to convert column values to boolean based on a provided mapping.
 
@@ -13,10 +13,12 @@ class ConvertToBoolean:
         - input_column_name: The name of the input column to apply the conversion on.
         - output_column_name: The name of the output column for the conversion results.
         - mapping: A dictionary mapping of original values to boolean values.
+        - none_matches: Where to map non matches to. If not set, drops non matches. Defaults to None.
         """
         self.input_column_name = input_column_name
         self.output_column_name = output_column_name
         self.mapping = mapping
+        self.non_matches = non_matches
 
     def process(self, df: DataFrame) -> DataFrame:
         """
@@ -34,17 +36,12 @@ class ConvertToBoolean:
                 return self.mapping[value]
             else:
                 # logging.warning(f"Encountered an unexpected value '{value}' in column '{self.input_column_name}' that is not defined in the mapping. Returning None.")
-                return None
+                return self.non_matches
 
         convert_to_boolean_udf = udf(convert_value, BooleanType())
 
         # Apply the conversion to the specified column
-        original_count = df.count()
         df = df.withColumn(self.output_column_name, convert_to_boolean_udf(col(self.input_column_name)))
         # drop None values
         df = df.filter(col(self.output_column_name).isNotNull())
-        new_count = df.count()
-        diff = original_count - new_count
-        if diff > 0:
-            logging.warning(f"⚠️ Dropped {diff}/{original_count} rows.")
         return df
