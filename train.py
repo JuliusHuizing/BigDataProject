@@ -41,12 +41,9 @@ if __name__ == "__main__":
             cleaned_count = df.count()
             diff = original_count - cleaned_count
             if diff > 0:
-                logging.warning(f"🟠 Dropped {diff} rows")
+                logging.warning(f"🟠 Dropped {diff} rows in {module}.")
         logging.info("✅ Data Preprocessed.")
-        # new_count = df.count()
-        # num_deleted_rows = original_count - new_count
-        # if num_deleted_rows > 0
-        
+       
         logging.info("Checking preprocessed data quality before training...")
             
         DataChecker().check_data(df)
