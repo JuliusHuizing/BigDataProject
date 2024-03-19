@@ -100,7 +100,7 @@ fluent_datasources:
   my_spark_datasource:
     type: spark
     assets:
-      my_df_dataset:
+      meh:
         type: dataframe
         batch_metadata: {}
   tst:
