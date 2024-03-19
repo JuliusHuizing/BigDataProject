@@ -38,8 +38,7 @@ class GXDataQualityCheckModule(DataQualityCheckModule):
                 logging.warning("🟠 Data quality check failed, but continuing according to config.")
                 return data
             else:
-                # FIXME: this require absolute path...
-                # url = 'file:///../../gx/uncommited/data_docs/index.html'
+                #FIXME: this is a bit hardcoded...
                 dirname = os.path.dirname(__file__)
                 url = 'file://' + os.path.join(dirname, '../../gx/uncommitted/data_docs/local_site/index.html')
                 webbrowser.open(url, new=2)
