@@ -1,0 +1,64 @@
+collect: 
+  module: "DataLoader"
+  config: 
+    data_dir: "data/train/"
+    merge: True
+    # n: 1000 # you can take subset of the data to debug more quickly.
+
+preprocess:
+  clean:
+    - module: "DropNull"
+      config:
+        columns: ["review_body", "review_headline", "label"]
+
+    - module: DropNotIn
+      config:
+        input_column_name: "label"
+        output_column_name: "label"
+        targets: ["True", "False"]
+
+    - module: ConvertToBoolean
+      config:
+        input_column_name: "verified_purchase"
+        output_column_name: "verified_purchase"
+        mapping: {"Y": True, "N": False}
+
+    - module: ConvertToBoolean
+      config:
+        input_column_name: "vine"
+        output_column_name: "vine"
+        mapping: {"Y": True, "N": False}
+
+  add_features:
+    - module: TextLengthFeature
+      config:
+        input_column_name: "review_body"
+        output_column_name: "review_body_length"
+    - module: TextLengthFeature
+      config:
+        input_column_name: "review_headline"
+        output_column_name: "review_headline_length"
+    # - module: TextSentimentFeature #FIXME: this crashes my laptop atm..
+    #   config:
+    #     input_column_name: "review_body"
+    #     output_column_name: "review_body_sentiment"
+
+
+train:
+    module: "TrainPipeline"
+    config:
+      # the portion to be used for trainining (and validation). The rest for testing
+      train_split: 0.7
+      features:
+        - "review_body_length"
+        - "review_headline_length"
+        - "verified_purchase"
+        - "vine"
+        # - "review_body_sentiment"
+      target: "label"
+      save_dir: "model"
+      overwrite: True
+
+
+
+

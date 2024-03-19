@@ -1,0 +1,44 @@
+collect: 
+  module: "DataLoader"
+  config: 
+    data_dir: "data/predict/"
+    # we want to keep two dataframes for predictions
+    merge: False #FIXME: if this is set to true, saving predictions will fail
+
+preprocess:
+  clean:
+    - module: ConvertToBoolean
+      config:
+        input_column_name: "verified_purchase"
+        output_column_name: "verified_purchase"
+        mapping: {"Y": True, "N": False}
+        map_non_matches_to: False
+
+    - module: ConvertToBoolean
+      config:
+        input_column_name: "vine"
+        output_column_name: "vine"
+        mapping: {"Y": True, "N": False}
+        map_non_matches_to: False
+
+
+  add_features:
+    - module: TextLengthFeature
+      config:
+        input_column_name: "review_body"
+        output_column_name: "review_body_length"
+    - module: TextLengthFeature
+      config:
+        input_column_name: "review_headline"
+        output_column_name: "review_headline_length"
+
+load_model:
+  model_path: "model"
+
+predict:
+  save_dir: "predictions/"
+  overwrite: True
+
+
+
+

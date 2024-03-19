@@ -1,0 +1,35 @@
+fields:
+  - name: ""
+    type: IntegerType
+    nullable: true
+  - name: product_id
+    type: StringType
+    nullable: true
+  - name: product_parent
+    type: IntegerType
+    nullable: true
+  - name: product_title
+    type: StringType
+    nullable: true
+  - name: vine
+    type: StringType
+    nullable: true
+  - name: verified_purchase
+    type: StringType
+    nullable: true
+  - name: review_headline
+    type: StringType
+    nullable: true
+  - name: review_body
+    type: StringType
+    nullable: true
+  - name: review_date
+    type: StringType
+    nullable: true
+  - name: marketplace_id
+    type: IntegerType
+    nullable: true
+  - name: product_category_id
+    type: IntegerType
+    nullable: true
+  
