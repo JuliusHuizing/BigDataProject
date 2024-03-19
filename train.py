@@ -26,7 +26,9 @@ if __name__ == "__main__":
         logging.info("✅ Preprocessing pipeline initialized.")
         
         logging.info("Initializing pre-trainining data quality check pipeline...")
-        pre_train_data_quality_check_pipeline = DataQualityCheckModuleFactory.create_module(config["pre_training_data_quality_check"]["module"], config["pre_training_data_quality_check"]["config"])
+        pre_train_data_quality_check_pipeline = DataQualityCheckModuleFactory\
+            .create_module(config["pre_training_data_quality_check"]["module"], 
+                           config["pre_training_data_quality_check"]["config"])
         logging.info("✅ Pre-training data quality check pipeline initialized.")
 
         logging.info("Initializing training pipeline...")
@@ -50,9 +52,10 @@ if __name__ == "__main__":
         logging.info("✅ Data Preprocessed.")
        
         logging.info("Checking preprocessed data quality before training...")
-            
         DataChecker().check_data(df)
+        df = pre_train_data_quality_check_pipeline.process(df)
         logging.info("✅ Data seems ready for training.")
+
              
         logging.info("Starting training...")
         _ = train_pipeline.train(df)
