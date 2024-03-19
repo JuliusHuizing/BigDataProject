@@ -5,13 +5,11 @@ collect:
     merge: True
     # n: 1000 # you can take subset of the data to debug more quickly.
 
-
 raw_data_quality_check:
   module: "GXDataQualityCheckModule"
   config:
     expectation_suite_name: "raw_data_expectation_suite"
     continue_after_failure: True
-
 
 preprocess:
   clean:
