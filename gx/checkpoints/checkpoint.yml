@@ -20,11 +20,11 @@ evaluation_parameters: {}
 runtime_configuration: {}
 validations:
   - batch_request:
-      datasource_name: my_spark_datasource
-      data_asset_name: meh
+      datasource_name: spark_data_source
+      data_asset_name: asset
       options: {}
       batch_slice:
-    expectation_suite_name: preprocessed_data_expectation_suite
+    expectation_suite_name: raw_data_expectation_suite
 profilers: []
 ge_cloud_id:
 expectation_suite_ge_cloud_id:
