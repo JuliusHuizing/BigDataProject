@@ -109,6 +109,12 @@ fluent_datasources:
       my_df_dataset:
         type: dataframe
         batch_metadata: {}
+  spark_data_source:
+    type: spark
+    assets:
+      asset:
+        type: dataframe
+        batch_metadata: {}
 notebooks:
 include_rendered_content:
   globally: false
