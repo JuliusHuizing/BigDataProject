@@ -21,6 +21,12 @@ if __name__ == "__main__":
         data_loader = DataCollectorFactory.create_module(config["collect"]["module"], config["collect"]["config"])
         logging.info("✅ Data loader initialized.")
         
+        logging.info("Initializing raw data quality check pipeline...")
+        raw_data_quality_check_module = DataQualityCheckModuleFactory\
+            .create_module(config["raw_data_quality_check"]["module"], 
+                           config["raw_data_quality_check"]["config"])
+        logging.info("✅ Raw data quality check pipeline initialized.")
+        
         logging.info("Initializing preprocessing pipeline...")
         preprocessing_pipeline = initialize_classes(config["preprocess"])
         logging.info("✅ Preprocessing pipeline initialized.")
@@ -41,6 +47,11 @@ if __name__ == "__main__":
         # original_count = df.count()
         
         logging.info("✅ Data collected.")
+        
+        logging.info("Checking raw data quality...")
+        df = raw_data_quality_check_module.process(df)
+        logging.info("✅ Raw data quality checked.")
+        
         logging.info("Cleaning Data...")
         for module in preprocessing_pipeline:
             original_count = df.count()
