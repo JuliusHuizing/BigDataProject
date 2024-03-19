@@ -3,6 +3,7 @@ from Pipelines.Collect.DataCollectorFactory import DataCollectorFactory
 from Pipelines.Train.TrainPipelineFactory import TrainPipelineFactory
 from Pipelines.Predict.PredictPipelineFactory import PredictPipelineFactory
 from Pipelines.Predict.PredictPipeline import PredictPipeline
+from Pipelines.Check.DataQualityCheckModuleFactory import DataQualityCheckModuleFactory
 import yaml
 from DataChecker import DataChecker
 
@@ -23,6 +24,10 @@ if __name__ == "__main__":
         logging.info("Initializing preprocessing pipeline...")
         preprocessing_pipeline = initialize_classes(config["preprocess"])
         logging.info("✅ Preprocessing pipeline initialized.")
+        
+        logging.info("Initializing pre-trainining data quality check pipeline...")
+        pre_train_data_quality_check_pipeline = DataQualityCheckModuleFactory.create_module(config["pre_training_data_quality_check"]["module"], config["pre_training_data_quality_check"]["config"])
+        logging.info("✅ Pre-training data quality check pipeline initialized.")
 
         logging.info("Initializing training pipeline...")
         train_pipeline = TrainPipelineFactory.create_module(config["train"]["module"], config["train"]["config"])
@@ -61,7 +66,6 @@ if __name__ == "__main__":
         logging.error(f" ❌ Error in pipeline: {e}")
         raise e
     
-    # train_pipeline.load_and_evaluate_model()
     
     
     

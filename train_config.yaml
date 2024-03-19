@@ -43,21 +43,31 @@ preprocess:
     #     input_column_name: "review_body"
     #     output_column_name: "review_body_sentiment"
 
+  # check:
+  #   module: "GreatExpectations"
+  #   expectation_suite_path: "preprocessed_data_expectation_suite"
+
+
+pre_training_data_quality_check:
+  module: "GXDataQualityCheckModule"
+  config:
+    expectation_suite_name: "my_expectation_suite"
+    continue_after_failure: False
 
 train:
-    module: "TrainPipeline"
-    config:
-      # the portion to be used for trainining (and validation). The rest for testing
-      train_split: 0.7
-      features:
-        - "review_body_length"
-        - "review_headline_length"
-        - "verified_purchase"
-        - "vine"
-        # - "review_body_sentiment"
-      target: "label"
-      save_dir: "model"
-      overwrite: True
+  module: "TrainPipeline"
+  config:
+    # the portion to be used for trainining (and validation). The rest for testing
+    train_split: 0.7
+    features:
+      - "review_body_length"
+      - "review_headline_length"
+      - "verified_purchase"
+      - "vine"
+      # - "review_body_sentiment"
+    target: "label"
+    save_dir: "model"
+    overwrite: True
 
 
 
