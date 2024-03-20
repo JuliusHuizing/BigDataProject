@@ -1,8 +1,8 @@
-from Pipelines.Preprocess.PreprocessingModuleFactory import PreprocessingModuleFactory
-from Pipelines.Collect.DataCollectorFactory import DataCollectorFactory
-from Pipelines.Train.TrainPipelineFactory import TrainPipelineFactory
-from Pipelines.Predict.PredictPipelineFactory import PredictPipelineFactory
-from Pipelines.Predict.PredictPipeline import PredictPipeline
+from modules.Preprocess.PreprocessingModuleFactory import PreprocessingModuleFactory
+from modules.Collect.DataCollectorFactory import DataCollectorFactory
+from modules.Train.TrainPipelineFactory import TrainPipelineFactory
+from modules.Predict.PredictPipelineFactory import PredictPipelineFactory
+from modules.Predict.PredictPipeline import PredictPipeline
 import yaml
 import os
 import logging
@@ -39,7 +39,7 @@ if __name__ == "__main__":
         # Initialize prediction and preprocessing pipeline
         predict_pipeline = PredictPipeline(config["load_model"]["model_path"])
         predict_preprocessing_pipeline = initialize_classes(config["preprocess"])
-        logging.info("Prediction and preprocessing pipelines initialized.")
+        logging.info("Prediction and preprocessing modules initialized.")
 
         # Process and predict
         for source_file, df in zip(prediction_files, dfs):

@@ -1,7 +1,7 @@
 import yaml
 import importlib
 import os
-from Pipelines.Preprocess.PreprocessingModuleFactory import PreprocessingModuleFactory
+from modules.Preprocess.PreprocessingModuleFactory import PreprocessingModuleFactory
 import yaml
 
 def load_yaml_file(file_path):

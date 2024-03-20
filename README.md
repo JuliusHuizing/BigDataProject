@@ -2,11 +2,16 @@
 # ProML
 
 <p align="center">
-  ProML is a protocol-oriented machine learning pipeline designed to be reusable and extendable for various Big Data classification tasks. 
+  ProML is a protocol-oriented machine learning pipeline designed to be reusable and extendable for various Big, or small, data inference tasks. 
 </p>
 
 ## 📋 **Overview**
 Through a [protocol-driven design](https://scotteg.github.io/protocol-oriented-programming), ProML defines the blueprint for a full machine learning pipeline from data collection to inference. Out of the box, ProML implements a binary classification task of predicting whether a product review is useful or not through supervised learning on locally stored *.csv* files using [Pyspark](https://spark.apache.org/docs/latest/api/python/index.html). However, because of its modular and protocol-driven design, ProML can easily be adapted or extended to facilitate other inference tasks, schema changes, or even completely different kinds of data sources or frameworks like [DuckDB](https://duckdb.org).
+
+ProML tries to abstract away as much of the implementation details as possible by boiling down the machine learning pipeline to the fundamental stages of *data collection*, *data preprocessing*, *model training*, and *model inference*. Users can easily adapt or extend any of these stages by changing configuration files and without changing any source code. 
+
+However, for users that want add new functionality, ProML also makes it easy to create new pipeline modules through the use of predefined protocols and factory methods. By ensuring new modules conform to predefined protocols, ProML can immedeatly use these new modules inside the train and inference workflows without the user needing to alter any exisiting code.
+
 
 ## ✅ **Features**
 - ### 🔄 *Protocol-driven design*
@@ -35,7 +40,7 @@ To be added as encountered and documented.
 ProML uses Poetry as its dependency manager. If you do not have Poetry installed, follow [Poetry's installation instructions](https://python-poetry.org/docs/). Once you have Poetry installed, you can install the dependencies defined in *pyproject.toml* and activate the corresponding virtual environment by running the following commands:
 
 > [!WARNING]
-> MacOS users might run into problems with Java when trying to install the dependencies. If you encounter any issues, consider downloading and installing the ARM version of Java8 at: https://www.java.com/en/download/
+> MacOS users might run into problems with the Java version that comes per default on Macs. If you encounter any issues, consider downloading and installing the ARM version of Java8 at: https://www.java.com/en/download/
 
 ```bash
 # install dependencies defined in pyproject.toml
@@ -48,7 +53,7 @@ poetry shell
 ```
 
 ## 🚀 **Quick Start**
-The quickest way to get started is to ensure you can successfully run both the default trainining and prediction pipelines. After having installed the dependencies and activated a Poetry shell, you can run the following commands to run both using the default conifuration:
+The quickest way to get started is to ensure you can successfully run both the default trainining and prediction modules. After having installed the dependencies and activated a Poetry shell, you can run the following commands to run both using the default conifuration:
 
 ```bash
 # run the full training pipeline, from data collection to saving the model
@@ -67,17 +72,14 @@ python predict.py
 ```
 To adapt or extend the training or prediction pipeline, you can change the *train_config.yaml* and *predict_config.yaml* files, respectively. 
 > [!NOTE]
-> To adapt or extend the pipeline for other inference tasks, datasources, or frameworks, you can extend or add modules to the *Pipelines* directory. However, before doing so, we recommend reading about the ProML's architecture first.
+> To adapt or extend the pipeline for other inference tasks, datasources, or frameworks, you can extend or add modules to the *modules* directory. However, before doing so, we recommend reading about the ProML's architecture first.
 
 
 ## 🏛️ **Architecture**
-Describe the architecture of your machine learning pipeline. Include:
 
-A high-level overview of the components and how they interact.
-The role of protocols in ensuring reusability and extensibility.
-Diagrams or flowcharts, if they can help in understanding the architecture better.
-Extending the Pipeline
-Provide a detailed guide on how users can extend your pipeline by:
+![Alt text](./assets/flow_chart.png)
+
+
 
 ## Handling Additional Labeled Data
 #TODO: 
@@ -86,6 +88,13 @@ Provide a detailed guide on how users can extend your pipeline by:
 #TODO
 
 ## **Reusing / Adapting the pipeline for other ML tasks
+### Adding a preprocessing step
+*see branch..*
+
+
+## Current Implementations
+### ProMLReviewHelpfulnessClassifier
+
 
 <!-- Implementing new protocols for additional functionalities.
 Adding new components or models to the pipeline.

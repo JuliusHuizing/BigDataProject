@@ -1,11 +1,11 @@
-from  Pipelines.Preprocess.cleaning.CleanDirtyRows import CleanDirtyRows
-from  Pipelines.Preprocess.cleaning.CleanDuplicateRows import CleanDuplicateRows
+from  modules.Preprocess.cleaning.DropNull import CleanDirtyRows
+from  modules.Preprocess.cleaning.CleanDuplicateRows import CleanDuplicateRows
 
-from  Pipelines.Preprocess.feature_engineering.TextLanguageFeature import TextLanguageFeature
-from  Pipelines.Preprocess.feature_engineering.TextLengthFeature import TextLengthFeature
-from  Pipelines.Preprocess.feature_engineering.TextSentimentFeature import TextSentimentFeature
-from  Pipelines.Preprocess.collection.DataLoader import DataLoader
-from  Pipelines.Preprocess.collection.DataLoader import DataSplit
+from  modules.Preprocess.feature_engineering.TextLanguageFeature import TextLanguageFeature
+from  modules.Preprocess.feature_engineering.TextLengthFeature import TextLengthFeature
+from  modules.Preprocess.feature_engineering.TextSentimentFeature import TextSentimentFeature
+from  modules.Preprocess.collection.DataLoader import DataLoader
+from  modules.Preprocess.collection.DataLoader import DataSplit
 
 class CONFIG:
     DATA_COLLECTOR = DataLoader(split=DataSplit.TRAIN)
@@ -21,6 +21,5 @@ class CONFIG:
     ]
     PREPROCESSING_MODULES = DATA_CLEANING_MODULES + FEATURE_ENGINEERING_MODULES
     
-    # STEPS = COLLECTION_STEPS + FEATURE_ENGINEERING_MODULES
         
         

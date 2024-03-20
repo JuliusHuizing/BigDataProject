@@ -1,9 +1,9 @@
-from .cleaning.CleanDirtyRows import CleanDirtyRows
-from .cleaning.CleanDuplicateRows import CleanDuplicateRows
+from ..modules.Preprocess.cleaning.DropNull import CleanDirtyRows
+from ..modules.Preprocess.cleaning.CleanDuplicateRows import CleanDuplicateRows
 
-from .feature_engineering.TextLanguageFeature import TextLanguageFeature
-from .feature_engineering.TextLengthFeature import TextLengthFeature
-from .feature_engineering.TextSentimentFeature import TextSentimentFeature
+from ..modules.Preprocess.feature_engineering.TextLanguageFeature import TextLanguageFeature
+from ..modules.Preprocess.feature_engineering.TextLengthFeature import TextLengthFeature
+from ..modules.Preprocess.feature_engineering.TextSentimentFeature import TextSentimentFeature
 from .collection.DataLoader import DataLoader
 from .collection.DataLoader import DataSplit
 

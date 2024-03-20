@@ -1,9 +1,9 @@
-from Pipelines.Preprocess.PreprocessingModuleFactory import PreprocessingModuleFactory
-from Pipelines.Collect.DataCollectorFactory import DataCollectorFactory
-from Pipelines.Train.TrainPipelineFactory import TrainPipelineFactory
-from Pipelines.Predict.PredictPipelineFactory import PredictPipelineFactory
-from Pipelines.Predict.PredictPipeline import PredictPipeline
-from Pipelines.Check.DataQualityCheckModuleFactory import DataQualityCheckModuleFactory
+from modules.Preprocess.PreprocessingModuleFactory import PreprocessingModuleFactory
+from modules.Collect.DataCollectorFactory import DataCollectorFactory
+from modules.Train.TrainPipelineFactory import TrainPipelineFactory
+from modules.Predict.PredictPipelineFactory import PredictPipelineFactory
+from modules.Predict.PredictPipeline import PredictPipeline
+from modules.Check.DataQualityCheckModuleFactory import DataQualityCheckModuleFactory
 import yaml
 from DataChecker import DataChecker
 

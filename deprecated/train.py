@@ -1,7 +1,7 @@
 
 from deprecated.PreprocessingPipeline import PreprocessingPipeline
 from deprecated.PreprocessingConfig import PreprocessingConfig
-from Pipelines.Train.TrainPipeline import TrainPipeline
+from modules.Train.TrainPipeline import TrainPipeline
 
 if __name__ == "__main__":
     preprocessing_pipeline = PreprocessingPipeline (
