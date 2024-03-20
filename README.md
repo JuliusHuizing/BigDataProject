@@ -5,12 +5,33 @@
   ProML is a protocol-oriented machine learning pipeline designed to be reusable and extendable for various Big, or small, data inference tasks. 
 </p>
 
+## Table of Contents
+
+- [ProML](#proml)
+  - [Table of Contents](#table-of-contents)
+  - [📋 **Overview**](#-overview)
+  - [✅ **Features**](#-features)
+  - [⚠️ **Known Issues**](#️-known-issues)
+  - [📦 **Requirements \& Installation**](#-requirements--installation)
+  - [🚀 **Quick Start**](#-quick-start)
+  - [🏛️ **Architecture**](#️-architecture)
+  - [👩🏻‍💻🧑🏽‍💻👨🏿‍💻 Handling Adapaptions \& Extenions](#-handling-adapaptions--extenions)
+    - [Handling additional data](#handling-additional-data)
+    - [Handling schema Changes](#handling-schema-changes)
+    - [Adding a preprocessing module to the pipeline](#adding-a-preprocessing-module-to-the-pipeline)
+  - [Current Implementations](#current-implementations)
+    - [ProMLReviewHelpfulnessClassifier](#promlreviewhelpfulnessclassifier)
+
+
+
+
 ## 📋 **Overview**
 Through a [protocol-driven design](https://scotteg.github.io/protocol-oriented-programming), ProML defines the blueprint for a full machine learning pipeline from data collection to inference. Out of the box, ProML implements a binary classification task of predicting whether a product review is useful or not through supervised learning on locally stored *.csv* files using [Pyspark](https://spark.apache.org/docs/latest/api/python/index.html). However, because of its modular and protocol-driven design, ProML can easily be adapted or extended to facilitate other inference tasks, schema changes, or even completely different kinds of data sources or frameworks like [DuckDB](https://duckdb.org).
 
 ProML tries to abstract away as much of the implementation details as possible by boiling down the machine learning pipeline to the fundamental stages of *data collection*, *data preprocessing*, *model training*, and *model inference*. Users can easily adapt or extend any of these stages by changing configuration files and without changing any source code. 
 
 However, for users that want add new functionality, ProML also makes it easy to create new pipeline modules through the use of predefined protocols and factory methods. By ensuring new modules conform to predefined protocols, ProML can immedeatly use these new modules inside the train and inference workflows without the user needing to alter any exisiting code.
+
 
 
 ## ✅ **Features**
