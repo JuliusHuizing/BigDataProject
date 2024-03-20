@@ -65,7 +65,10 @@ python train.py
 # uses the config defined in predict.yaml
 python predict.py
 ```
-To adapt or extend the training or prediction pipeline, you can change the *train_config.yaml* and *predict_config.yaml* files, respectively.
+To adapt or extend the training or prediction pipeline, you can change the *train_config.yaml* and *predict_config.yaml* files, respectively. 
+> [!NOTE]
+> To adapt or extend the pipeline for other inference tasks, datasources, or frameworks, you can extend or add modules to the *Pipelines* directory. However, before doing so, we recommend reading about the ProML's architecture first.
+
 
 ## 🏛️ **Architecture**
 Describe the architecture of your machine learning pipeline. Include:
