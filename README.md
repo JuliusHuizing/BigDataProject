@@ -48,7 +48,24 @@ poetry shell
 ```
 
 ## 🚀 **Quick Start**
-Offer a simple example or tutorial that shows how to get the pipeline up and running with minimal setup. This could be a basic example that demonstrates the pipeline's core functionality.
+The quickest way to get started is to ensure you can successfully run both the default trainining and prediction pipelines. After having installed the dependencies and activated a Poetry shell, you can run the following commands to run both using the default conifuration:
+
+```bash
+# run the full training pipeline, from data collection to saving the model
+# uses the config defined in train.yaml
+python train.py
+```
+
+> [!NOTE]
+> Running the prediction pipeline will fail if you have not ran the training pipeline first.
+> To save resources and avoid merge conflicts, trained models are not kept under version control; hence you first need to train and save a model before you can run the prediction pipeline.
+
+```bash
+# run the prediction pipeline, using a saved model to predict unlabeled data
+# uses the config defined in predict.yaml
+python predict.py
+```
+To adapt or extend the training or prediction pipeline, you can change the *train_config.yaml* and *predict_config.yaml* files, respectively.
 
 ## 🏛️ **Architecture**
 Describe the architecture of your machine learning pipeline. Include:
