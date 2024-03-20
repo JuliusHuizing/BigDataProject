@@ -22,7 +22,7 @@ Through a [protocol-driven design](https://scotteg.github.io/protocol-oriented-p
   ProML's training process is driven by configuration files, allowing users to easily adjust model parameters, training data sources, and other settings without modifying the code. This flexibility simplifies experimentation and tuning of models for different tasks.
 
 - ### 🧠 *Configuration-driven Inference*
-  Similar to training, the inference process is controlled by configuration files, ensuring that models can be deployed and utilized with different parameters and in various environments efficiently and consistently.
+  Similar to training, the inference process is controlled by configuration files. By using a separate configuration file for inference, ProML makes it easy to use slightly different preprocessing steps for inference than for training. This comes in handy, for example, when it is warranted to drop dirty data duringn training while not so during inference.
 
 - ### 🛠️ *Designed to Reused, Adapted, and Extended*
   The pipeline is built with adaptability and extensibility at its core, encouraging users to modify and extend it for their specific needs. Whether it's integrating new data sources, applying the pipeline to different machine learning tasks, or enhancing its capabilities with additional features, ProML is designed to support and streamline these processes.
