@@ -79,18 +79,33 @@ To adapt or extend the training or prediction pipeline, you can change the *trai
 
 ![Alt text](./assets/flow_chart.png)
 
+ProML tries to abstract away as much of the implementation details as possible by boiling down the machine learning pipeline to the fundamental stages of *data collection*, *data preprocessing*, *model training*, and *model inference*. Users can easily adapt or extend any of these stages by changing configuration files and without changing any source code. 
+
+However, for users that want add new functionality, ProML also makes it easy to create new pipeline modules through the use of predefined protocols and factory methods. By ensuring new modules conform to predefined protocols, ProML can immedeatly use these new modules inside the train and inference workflows without the user needing to alter any exisiting code.
+
+## 👩🏻‍💻🧑🏽‍💻👨🏿‍💻 Handling Adapaptions & Extenions
 
 
-## Handling Additional Labeled Data
-#TODO: 
+### Handling additional data
+To use additional labeled data for training, simply make sure that the data is placed under the *data/train/* directory, or the training directory specified in *train_config.yaml*. Per default, any DataCollector conforming to the DataCollectorProtocol will collect all data under the directory specified in the *train_config.yaml* file.
 
-## **Handling Schema Changes**
-#TODO
+To do inference for additional unlabeled data, to the same, but then for the *data/predict/* directory and *predict_config.yaml* file.
 
-## **Reusing / Adapting the pipeline for other ML tasks
-### Adding a preprocessing step
-*see branch..*
+### Handling schema Changes
+Any DataLoader class conforming the the DataLoaderProtocol expects that there is a file called *schema.yaml*, defining the schem of the data, in the same directory as the data itself. To faciliate schema changes, simply change the schema in *schema.yaml* accordingly. In addition, you might need to add or alter expectations for the data, which are defined as expectation suites under the *gx/expectations/* directory. Finally, if column names have changes, you might also need to change the column names in the preprocessing steps of the *train_config.yaml* and *predict_config.yaml* files.
 
+### Adding a preprocessing module to the pipeline
+
+To add an existing preprocessing module to the pipeline, simply specify and add the configuration of the module to the *train_config.yaml* and *predict_config.yaml* files where appropiate.
+
+>[!NOTE]
+> The following section uses adding a *preprocessing module* as an example, but the steps of (1) implementing & conforming, (2) extending the factory, and (3) using the new module in a train or prediction configuration are the same for any module; just use the appropiate subdirectory and protocols accordingly.
+
+To add a non-exsiting preprocessing module to the the pipeline, follow the following steps:
+
+1) Implement the module under the appropiate subdirectory of the *modules/preproces/* directory (most likely the *preprocess* module) and make sure the implementation conforms the protocol defined in *modules/preprocess/PreprocessingModuleProtocol.py*.
+2) Ensure the new module can be build at runtime by adding its initializer to the module factory defined in *modules/preprocess/PreprocessingModuleFactory.py."
+3) Now the module is implemented and can be created at run-time, you can simply add it to the *train_config.yaml* and *predict_config.yaml* files where appropiate.
 
 ## Current Implementations
 ### ProMLReviewHelpfulnessClassifier
