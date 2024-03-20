@@ -2,42 +2,55 @@
 # ProML
 
 <p align="center">
-  ProML is protocol-oriented machine learning pipeline designed to be reusable and extendable for various Big Data classification tasks. 
+  ProML is a protocol-oriented machine learning pipeline designed to be reusable and extendable for various Big Data classification tasks. 
 </p>
 
 ## 📋 **Overview**
-Through a [protocol-driven design](https://scotteg.github.io/protocol-oriented-programming), ProML defines the blueprint for a full machine learning pipeline from data collection to inference. Out of the box, ProML implements a binary classification task of prediciting wether a product review is usefull or not through supervised learning on locally stored *.csv* files using [Pyspark](https://spark.apache.org/docs/latest/api/python/index.html). However, because of its modular and protocol-driven design, ProML can easily be adapted or extended to faciliate other inference tasks, schema changes, or even completely different kinds of datasources or frameworks like [DuckDB](https://duckdb.org).
+Through a [protocol-driven design](https://scotteg.github.io/protocol-oriented-programming), ProML defines the blueprint for a full machine learning pipeline from data collection to inference. Out of the box, ProML implements a binary classification task of predicting whether a product review is useful or not through supervised learning on locally stored *.csv* files using [Pyspark](https://spark.apache.org/docs/latest/api/python/index.html). However, because of its modular and protocol-driven design, ProML can easily be adapted or extended to facilitate other inference tasks, schema changes, or even completely different kinds of data sources or frameworks like [DuckDB](https://duckdb.org).
 
 ## ✅ **Features**
-- Protocol-driven design
-- Configuration-driven training
-- declared vs 
-- Reusable modules
-- 
+- ### 🔄 *Protocol-driven design*
+  In contrast to most traditional Python frameworks that typically use [Abstract Base Classes](https://docs.python.org/3/library/abc.html) to define modular and reusable interfaces, ProML uses [Python Protocols](https://mypy.readthedocs.io/en/stable/protocols.html), introduced in [PEP544](https://peps.python.org/pep-0544/), to do so. This approach ensures that any component in the pipeline can be easily replaced or extended without changing the core functionality, offering a flexible foundation for future developments.
 
-## ⚠️ Known Issues**
-#TODO:
+- ### 📐 *Explicit Schema Declarations*
+  "Explicit is better than implicit," is part of the [Zen of Python](https://peps.python.org/pep-0020/) and something ProML strides to fulfill. By using explicitly defined schemas for incoming data, ProML avoids a whole range of bugs and facilitates straightforward adaptation to future schema changes. 
 
+- ### ✔️ *Explicit Data Quality Checks*
+  ProML employs [Great Expectations](https://docs.greatexpectations.io/docs/reference/learn/conceptual_guides/gx_overview/) to ensure that data conforms to expectations at every step of the pipeline, enhancing reliability and trustworthiness of the results.
 
-## **Requirements & Installation**
-ProML uses Poetry as dependency manager. If you do not have Poetry installed, follow [Poetry's installation instructions](https://python-poetry.org/docs/). Once you have Poetry installed, you can install the dependencies defined in *pyproject.toml* and activate the correseponding virtual environment by running the following commands:
+- ### ⚙️ *Configuration-driven Training*
+  ProML's training process is driven by configuration files, allowing users to easily adjust model parameters, training data sources, and other settings without modifying the code. This flexibility simplifies experimentation and tuning of models for different tasks.
+
+- ### 🧠 *Configuration-driven Inference*
+  Similar to training, the inference process is controlled by configuration files, ensuring that models can be deployed and utilized with different parameters and in various environments efficiently and consistently.
+
+- ### 🛠️ *Designed to be Adapted & Extended*
+  The pipeline is built with adaptability and extensibility at its core, encouraging users to modify and extend it for their specific needs. Whether it's integrating new data sources, applying the pipeline to different machine learning tasks, or enhancing its capabilities with additional features, ProML is designed to support and streamline these processes.
+
+## ⚠️ **Known Issues**
+To be added as encountered and documented.
+
+## 📦 **Requirements & Installation**
+
+ProML uses Poetry as its dependency manager. If you do not have Poetry installed, follow [Poetry's installation instructions](https://python-poetry.org/docs/). Once you have Poetry installed, you can install the dependencies defined in *pyproject.toml* and activate the corresponding virtual environment by running the following commands:
 
 > [!WARNING]
-> MacOS' users might run into problems with Java when trying to install the dependencies. If you run into any problems, consider downloading and installing the ARM version of Java8 at: http
-s://www.java.com/en/download/
+> MacOS users might run into problems with Java when trying to install the dependencies. If you encounter any issues, consider downloading and installing the ARM version of Java8 at: https://www.java.com/en/download/
 
 ```bash
 # install dependencies defined in pyproject.toml
 poetry install
+```
+
+```bash
 # activate shell
 poetry shell
 ```
 
-
-## **Quick Start**
+## 🚀 **Quick Start**
 Offer a simple example or tutorial that shows how to get the pipeline up and running with minimal setup. This could be a basic example that demonstrates the pipeline's core functionality.
 
-## **Architecture**
+## 🏛️ **Architecture**
 Describe the architecture of your machine learning pipeline. Include:
 
 A high-level overview of the components and how they interact.
