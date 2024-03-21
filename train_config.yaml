@@ -3,7 +3,7 @@ collect:
   config: 
     data_dir: "data/train/"
     merge: True
-    n: 1000 # you can take subset of the data to debug more quickly.
+    # n: 1000 # you can take subset of the data to debug more quickly.
 
 raw_data_quality_check:
   module: "GXDataQualityCheckModule"
@@ -92,8 +92,8 @@ train:
     target: "label"
     grid_search:
       params:
-        numTrees: [1, 8, 64, 128, 256]
-        maxDepth: [1, 5, 10, 20]
+        numTrees: [1, 8, 64]
+        maxDepth: [1, 5, 10]
       k: 5
     save_dir: "model"
     overwrite: True

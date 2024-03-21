@@ -46,8 +46,14 @@ class TrainPipeline:
             cv = CrossValidator(estimator=pipeline,
                                 estimatorParamMaps=paramGrid,
                                 evaluator=evaluator,
-                                numFolds=self.grid_search['k'])  # Use k from grid_search
+                                numFolds=self.grid_search['k'],
+                                seed=42)
             self.cvModel = cv.fit(self.training_data)
+            # print best model performance on training data
+            print(f"ℹ️ Best model performance on training data: {evaluator.evaluate(self.cvModel.bestModel.transform(self.training_data))}")
+            # print best model paramaters:
+            # print(f"🧠 Best model parameters: {self.cvModel.bestModel.stages[-1].extractParamMap()}")
+            # best_model = self.cvModel.bestModel.explainParam
             self.model = self.cvModel.bestModel
         else:
             self.model = pipeline.fit(self.training_data)
@@ -66,7 +72,7 @@ class TrainPipeline:
         predictions = model.transform(self.test_data)
         evaluator = BinaryClassificationEvaluator(labelCol="indexedTarget")
         accuracy = evaluator.evaluate(predictions)
-        logging.info(f"🎯 Model Accuracy: {accuracy}")
+        logging.info(f"🎯 Best Found Model Accuracy on held-out test set:: {accuracy}")
 
     def process(self, df: DataFrame) -> None:
         self.df = df
