@@ -12,6 +12,7 @@ raw_data_quality_check:
     continue_after_failure: True
 
 preprocess:
+  # show we can integrate; but we don't really need it bc we actually can just use the market numbers as features.
   integrate: 
       collect:
         module: "JSONDataLoader"
