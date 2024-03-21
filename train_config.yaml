@@ -3,7 +3,7 @@ collect:
   config: 
     data_dir: "data/train/"
     merge: True
-    # n: 1000 # you can take subset of the data to debug more quickly.
+    n: 1000 # you can take subset of the data to debug more quickly.
 
 raw_data_quality_check:
   module: "GXDataQualityCheckModule"
@@ -83,8 +83,8 @@ train:
     train_split: 0.7
     num_trees: 120
     features:
-      # - "marketplace_id"
-      # - "product_category_id"
+      # - "marketplace_id" #FIXME: crashes during prediction bc of missing values...
+      - "product_category_id"
       - "review_body_length"
       - "review_headline_length"
       - "verified_purchase"

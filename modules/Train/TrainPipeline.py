@@ -6,7 +6,8 @@ from pyspark.ml.evaluation import BinaryClassificationEvaluator
 import os
 from pyspark.sql import DataFrame
 import logging
-
+from pyspark.ml.tuning import ParamGridBuilder, CrossValidator
+from pyspark.ml.evaluation import BinaryClassificationEvaluator
 
 class TrainPipeline:
     def __init__(self, features: list, num_trees: int, target: str, train_split: float, save_dir: str, overwrite: bool = False):
@@ -38,16 +39,41 @@ class TrainPipeline:
         self.label_indexer = StringIndexer(inputCol=self.target, outputCol="indexedTarget").fit(self.df)
 
     def configure_and_train_model(self):
-        # Configure the Random Forest model
-        rf = RandomForestClassifier(labelCol="indexedTarget", featuresCol="features", numTrees=self.num_trees)
+         # Configure the Random Forest model
+        rf = RandomForestClassifier(labelCol="indexedTarget", featuresCol="features")
         
         # Chain indexers and forest in a Pipeline
         pipeline = SparkPipeline(stages=[self.label_indexer, self.assembler, rf])
         
-        # Train model
-        self.model = pipeline.fit(self.training_data)
+        # Define parameter grid
+        paramGrid = ParamGridBuilder()\
+            .addGrid(rf.numTrees, [10, 20, 30]).addGrid(rf.maxDepth, [5, 10, 20]).build()
         
-        # Save the trained model
+        # Define evaluator
+        evaluator = BinaryClassificationEvaluator(labelCol="indexedTarget")
+        
+        # Configure CrossValidator
+        cv = CrossValidator(estimator=pipeline,
+                            estimatorParamMaps=paramGrid,
+                            evaluator=evaluator,
+                            numFolds=5)  # Example with 5-fold cross-validation
+        
+        # Run cross-validation, and choose the best set of parameters.
+        self.cvModel = cv.fit(self.training_data)
+        self.model = self.cvModel.bestModel
+        print("\n\n\n\n\n\n\n\n\n")
+        print(self.cvModel)
+
+        # # Configure the Random Forest model
+        # rf = RandomForestClassifier(labelCol="indexedTarget", featuresCol="features", numTrees=self.num_trees)
+        
+        # # Chain indexers and forest in a Pipeline
+        # pipeline = SparkPipeline(stages=[self.label_indexer, self.assembler, rf])
+        
+        # # Train model
+        # self.model = pipeline.fit(self.training_data)
+        
+        # # Save the trained model
         self.save_model()
 
     def save_model(self):
