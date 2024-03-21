@@ -16,6 +16,13 @@ class GXDataQualityCheckModule(DataQualityCheckModule):
         self.continue_on_failure = continue_after_failure
         datasource = self.context.sources.add_or_update_spark("spark_data_source")
         self.data_asset = datasource.add_dataframe_asset("asset")
+        self._contstruct_url()
+        
+    
+    def _contstruct_url(self) -> str:
+        #FIXME: this is a bit hardcoded...
+        dirname = os.path.dirname(__file__)
+        self.url = 'file://' + os.path.join(dirname, '../../gx/uncommitted/data_docs/local_site/index.html')
 
     def _check(self, data: DataFrame) -> bool:
         batch_request = self.data_asset.build_batch_request(dataframe=data)
@@ -35,14 +42,13 @@ class GXDataQualityCheckModule(DataQualityCheckModule):
     def process(self, data: DataFrame) -> DataFrame:
         if not self._check(data):
             if self.continue_on_failure:
-                logging.warning("🟠 Data quality check failed, but continuing according to config.")
+                logging.warning("\n\n🟠 Data quality check failed, but continuing according to config. ")
+                logging.warning(f"➡️ Data quality check report can be found at: {self.url}\n\n")
+                
                 return data
             else:
-                #FIXME: this is a bit hardcoded...
-                dirname = os.path.dirname(__file__)
-                url = 'file://' + os.path.join(dirname, '../../gx/uncommitted/data_docs/local_site/index.html')
-                webbrowser.open(url, new=2)
-
+                
+                webbrowser.open(self.url, new=2)
                 raise ValueError("Data quality check failed")   
             
         else:

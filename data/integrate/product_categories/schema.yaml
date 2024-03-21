@@ -1,0 +1,7 @@
+fields:
+  - name: "id"
+    type: IntegerType
+    nullable: False
+  - name: name
+    type: StringType
+    nullable: False

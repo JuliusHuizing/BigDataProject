@@ -2,6 +2,7 @@ import yaml
 import importlib
 import os
 from modules.Preprocess.PreprocessingModuleFactory import PreprocessingModuleFactory
+from modules.Collect.DataCollectorFactory import DataCollectorFactory
 import yaml
 
 def load_yaml_file(file_path):
@@ -17,14 +18,23 @@ def initialize_classes(config):
 
     # If config is a dictionary, check for "module"
     elif isinstance(config, dict):
+ 
         if "module" in config and "config" in config:
             module_name = config["module"]
             config = config["config"]
             # print(module_name, config)
             # although we could use importlib, we will use a factory pattern instead
             # because python relative imports are a just a pain.
-            module = PreprocessingModuleFactory.create_module(module_name, config)
-            modules.append(module)
+            try:
+                module = PreprocessingModuleFactory.create_module(module_name, config)
+            except Exception as e:
+                raise ValueError(f"Error creating module: {e}")
+            # except Exception as e:
+            #     try:
+            #         module = DataCollectorFactory.create_module(module_name, config)
+            #     except Exception as e:
+            #         raise ValueError(f"Error creating module: {e}")
+            # modules.append(module)
         else:
             # Recursively search for nested configurations
             for key in config:

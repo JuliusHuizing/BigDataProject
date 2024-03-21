@@ -1,10 +1,13 @@
 
 from .DataCollectorProtocol import DataCollectorProtocol
+from .JSONDataLoader import JSONDataLoader
 from .DataLoader import DataLoader
 class DataCollectorFactory:
     @staticmethod
     def create_module(module_name: str, module_config: dict) -> DataCollectorProtocol:
         try:
+            if module_name == "JSONDataLoader":
+                return JSONDataLoader(**module_config)
             if module_name == "DataLoader":
                 return DataLoader(**module_config)
             else:

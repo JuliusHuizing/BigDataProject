@@ -12,6 +12,21 @@ raw_data_quality_check:
     continue_after_failure: True
 
 preprocess:
+  integrate: 
+      collect:
+        module: "JSONDataLoader"
+        config: 
+          data_dir: "data/integrate/product_categories/"
+          merge: True
+      preprocess:
+        - module: "RenameColumns"
+          config:
+            mapping: {"name": "product_category_name"} 
+      join: 
+        column_primary_source: "product_category_id"
+        column_secondary_source: "id"
+        join_type: "inner"  # Can be "inner", "left", "right", "outer" depending on your requirements.
+
   clean:
     - module: "DropNull"
       config:
