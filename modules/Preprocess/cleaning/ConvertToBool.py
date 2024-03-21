@@ -44,4 +44,5 @@ class ConvertToBoolean:
         df = df.withColumn(self.output_column_name, convert_to_boolean_udf(col(self.input_column_name)))
         # drop None values
         df = df.filter(col(self.output_column_name).isNotNull())
+
         return df
