@@ -15,7 +15,7 @@ preprocess:
   clean:
     - module: "DropNull"
       config:
-        columns: ["review_body", "review_headline", "label"]
+        columns: ["label"]
 
     - module: DropNotIn
       config:

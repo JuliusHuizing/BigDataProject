@@ -1,5 +1,5 @@
 from pyspark.sql import DataFrame
-from pyspark.sql.functions import udf, col
+from pyspark.sql.functions import udf, col, length
 from pyspark.sql.types import IntegerType
 
 class TextLengthFeature:
@@ -24,5 +24,9 @@ class TextLengthFeature:
         Returns:
         - A PySpark DataFrame with an additional column for the text length.
         """
-        lengthUDF = udf(lambda x: len(x) if x else 0, IntegerType())
+        
+        #mode_text_length = data.select(mode(length(self.input_column_name))).collect()[0][0]
+        mode_text_length = 0
+        
+        lengthUDF = udf(lambda x: len(x) if x else int(mode_text_length), IntegerType())
         return data.withColumn(self.output_column_name, lengthUDF(col(self.input_column_name)))
