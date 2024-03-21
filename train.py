@@ -6,7 +6,7 @@ from modules.Predict.PredictPipeline import PredictPipeline
 from modules.Check.DataQualityCheckModuleFactory import DataQualityCheckModuleFactory
 import yaml
 from DataChecker import DataChecker
-
+from modules.Preprocess.integration.DataJoiner import DataJoiner
 from utils.initialize_modules_from_yaml import load_yaml_file, initialize_classes
 
 import logging
@@ -28,7 +28,23 @@ if __name__ == "__main__":
         logging.info("✅ Raw data quality check pipeline initialized.")
         
         logging.info("Initializing preprocessing pipeline...")
+        
+        # isolate integration step as separate phaase
+        integration_phase = config["preprocess"]["integrate"]
+        
+        integration_data_loader = DataCollectorFactory.create_module(integration_phase["collect"]["module"], integration_phase["collect"]["config"])
+        integration_preprocessing_pipeline = initialize_classes(integration_phase["preprocess"])
+        
+        join_config = integration_phase["join"]
+        integration_pipeline = DataJoiner(collect=integration_data_loader, preprocess = integration_preprocessing_pipeline, column_primary_source=join_config["column_primary_source"], column_secondary_source=join_config["column_secondary_source"], join_type=join_config["join_type"])
+        # integratoin_pipeline = initialize_classes(integration_phase)
+        integration_pipeline = initialize_classes(integration_phase["preprocess"])
+        
+        # remove it from the config to avoid problems down the line
+        del config["preprocess"]["integrate"]
+        
         preprocessing_pipeline = initialize_classes(config["preprocess"])
+        
         logging.info("✅ Preprocessing pipeline initialized.")
         
         logging.info("Initializing pre-trainining data quality check pipeline...")
@@ -51,6 +67,8 @@ if __name__ == "__main__":
         logging.info("Checking raw data quality...")
         df = raw_data_quality_check_module.process(df)
         logging.info("✅ Raw data quality checked.")
+        
+        
         
         logging.info("Cleaning Data...")
         for module in preprocessing_pipeline:
