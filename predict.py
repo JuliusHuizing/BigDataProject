@@ -38,6 +38,7 @@ if __name__ == "__main__":
 
         # Initialize prediction and preprocessing pipeline
         predict_pipeline = PredictPipeline(config["load_model"]["model_path"])
+        
         predict_preprocessing_pipeline = initialize_classes(config["preprocess"])
         logging.info("Prediction and preprocessing modules initialized.")
 

@@ -81,9 +81,10 @@ train:
   config:
     # the portion to be used for trainining (and validation). The rest for testing
     train_split: 0.7
+    num_trees: 120
     features:
-      - "marketplace_id"
-      - "product_category_id"
+      # - "marketplace_id"
+      # - "product_category_id"
       - "review_body_length"
       - "review_headline_length"
       - "verified_purchase"

@@ -9,7 +9,7 @@ import logging
 
 
 class TrainPipeline:
-    def __init__(self, features: list, target: str, train_split: float, save_dir: str, overwrite: bool = False):
+    def __init__(self, features: list, num_trees: int, target: str, train_split: float, save_dir: str, overwrite: bool = False):
         self.spark = SparkSession.builder.appName("RandomForestExample").getOrCreate()
         self.feature_columns = features
         self.target = target
@@ -17,6 +17,7 @@ class TrainPipeline:
         self.test_split = 1 - train_split
         self.overwrite = overwrite
         self.save_dir = save_dir
+        self.num_trees = num_trees
         
     def train(self, df: DataFrame) -> str:
         self.df = df
@@ -38,7 +39,7 @@ class TrainPipeline:
 
     def configure_and_train_model(self):
         # Configure the Random Forest model
-        rf = RandomForestClassifier(labelCol="indexedTarget", featuresCol="features", numTrees=10)
+        rf = RandomForestClassifier(labelCol="indexedTarget", featuresCol="features", numTrees=self.num_trees)
         
         # Chain indexers and forest in a Pipeline
         pipeline = SparkPipeline(stages=[self.label_indexer, self.assembler, rf])
