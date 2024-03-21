@@ -81,7 +81,6 @@ train:
   config:
     # the portion to be used for trainining (and validation). The rest for testing
     train_split: 0.7
-    num_trees: 120
     features:
       # - "marketplace_id" #FIXME: crashes during prediction bc of missing values...
       - "product_category_id"
@@ -91,6 +90,11 @@ train:
       - "vine"
       # - "review_body_sentiment"
     target: "label"
+    grid_search:
+      params:
+        numTrees: [1, 8, 64, 128, 256]
+        maxDepth: [1, 5, 10, 20]
+      k: 5
     save_dir: "model"
     overwrite: True
 
