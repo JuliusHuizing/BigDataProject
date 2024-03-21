@@ -10,6 +10,23 @@
         "meta": {}
       },
       {
+        "expectation_type": "expect_column_values_to_be_between",
+        "kwargs": {
+          "column": "product_category_id",
+          "min_value": 0,
+          "max_value": 28,
+          "meta": {
+            "notes": {
+              "format": "markdown",
+              "content": [
+                "The product_category_id should be between 0 and 28 so we can integrate category.json without dropping rows."
+              ]
+            }
+          }
+      
+        }
+      },
+      {
         "expectation_type": "expect_column_values_to_not_be_null",
         "kwargs": {
           "column": "review_body"
