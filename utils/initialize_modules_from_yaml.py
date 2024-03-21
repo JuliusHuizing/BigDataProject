@@ -27,6 +27,7 @@ def initialize_classes(config):
             # because python relative imports are a just a pain.
             try:
                 module = PreprocessingModuleFactory.create_module(module_name, config)
+                modules.append(module)
             except Exception as e:
                 raise ValueError(f"Error creating module: {e}")
             # except Exception as e:
