@@ -29,27 +29,27 @@ preprocess:
         join_type: "inner"  # Can be "inner", "left", "right", "outer" depending on your requirements.
 
 
-  impute_missing_values:
-    - module: RandomNullInjector
-      config:
-        input_column_name: "marketplace_id"
-        output_column_name: marketplace_id"
-        null_percentage: 0.1
-    - module: RandomNullInjector
-      config:
-        input_column_name: "product_category_id"
-        output_column_name: product_category_id"
-        null_percentage: 0.1
+  # impute_missing_values:
+  #   - module: RandomNullInjector
+  #     config:
+  #       input_column_name: "marketplace_id"
+  #       output_column_name: marketplace_id"
+  #       null_percentage: 0.1
+  #   - module: RandomNullInjector
+  #     config:
+  #       input_column_name: "product_category_id"
+  #       output_column_name: product_category_id"
+  #       null_percentage: 0.1
 
-    - module: ImputationModule
-      config:
-        column_name: "product_category_id"
-        imputation_method: "random"
+  #   - module: ImputationModule
+  #     config:
+  #       column_name: "product_category_id"
+  #       imputation_method: "random"
 
-    - module: ImputationModule
-      config:
-        column_name: "marketplace_id"
-        imputation_method: "random"
+  #   - module: ImputationModule
+  #     config:
+  #       column_name: "marketplace_id"
+  #       imputation_method: "random"
 
   clean:
     - module: "DropNull"
@@ -83,6 +83,8 @@ preprocess:
     #   config:
     #     input_column_name: "product_category_id"
     #     output_column_name: "product_category_id_encoded"
+
+    # Use hasing instead of one hot encoding for product_category_id because there are an inconsistent number of categories in the training and inference data.
     - module: HashingModule
       config:
         input_column_name: "product_category_id"
@@ -156,9 +158,14 @@ train:
     target: "label"
     grid_search:
       params:
-        numTrees: [200]
-        maxDepth: [1, 5, 10]
-      k: 5
+        numTrees: [100, 200, 400]
+        # maxBins: [32]
+        seed: [42]
+        # subSamplingRate: [0.8, 1.0]
+        maxDepth: [5, 10]
+        bootstrap: [True]
+
+      k: 10
     save_dir: "model"
     overwrite: True
 
