@@ -21,7 +21,6 @@ preprocess:
         mapping: {"Y": True, "N": False}
         map_non_matches_to: False
 
-
   add_features:
     - module: TextLengthFeature
       config:
@@ -31,6 +30,16 @@ preprocess:
       config:
         input_column_name: "review_headline"
         output_column_name: "review_headline_length"
+
+  impute_missing_values:
+    - module: ImputationModule
+      config:
+        column_name: "product_category_id"
+        imputation_method: "random"
+    - module: ImputationModule
+      config:
+        column_name: "marketplace_id"
+        imputation_method: "random"
 
 load_model:
   model_path: "model"

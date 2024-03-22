@@ -132,6 +132,8 @@ To add a non-exsiting preprocessing module to the the pipeline, follow the follo
 ## Current Implementations
 ### ProMLReviewHelpfulnessClassifier
 
+Future work:
+- currently, the input data for predictions contains missing values for the marketplace_id and product_category_id. We do use these features during training, and hence need imppute them during inference. Currently, we impute them randomly from the inference data to maintain the data distribution. However, ideally, we would also randomly drop some of the values for the training data to ensure the model can learn to handle this imputation.
 
 <!-- Implementing new protocols for additional functionalities.
 Adding new components or models to the pipeline.

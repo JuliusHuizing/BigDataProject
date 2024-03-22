@@ -8,13 +8,16 @@ from .cleaning.ConvertToBool import ConvertToBoolean
 from .cleaning.DropNotIn import DropNotIn
 from .cleaning.RenameColumns import RenameColumns
 from .integration.DataJoiner import DataJoiner
+from .imputation.ImputationModule import ImputationModule
 
 class PreprocessingModuleFactory:
     @staticmethod
     def create_module(module_name: str, module_config: dict) -> PreprocessingModule:
         try:
-            # if module_name == "DataJoiner":
-            #     return DataJoiner(**module_config)
+            if module_name == "ImputationModule":
+                return ImputationModule(**module_config)
+            if module_name == "DataJoiner":
+                return DataJoiner(**module_config)
             if module_name == "RenameColumns":
                 return RenameColumns(**module_config)
             if module_name == "DropNotIn":
