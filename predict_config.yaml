@@ -31,7 +31,6 @@ preprocess:
         input_column_name: "review_headline"
         output_column_name: "review_headline_length"
   
-
   impute_missing_values:
     - module: ImputationModule
       config:
@@ -47,6 +46,11 @@ preprocess:
       config:
         input_column_name: "marketplace_id"
         output_column_name: "marketplace_id_encoded"
+
+    # - module: "OneHotEncodingModule"
+    #   config:
+    #     input_column_name: "product_category_id"
+    #     output_column_name: "product_category_id_encoded"
 
 load_model:
   model_path: "model"

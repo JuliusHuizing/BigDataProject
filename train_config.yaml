@@ -28,6 +28,29 @@ preprocess:
         column_secondary_source: "id"
         join_type: "inner"  # Can be "inner", "left", "right", "outer" depending on your requirements.
 
+
+  impute_missing_values:
+    - module: RandomNullInjector
+      config:
+        input_column_name: "marketplace_id"
+        output_column_name: marketplace_id"
+        null_percentage: 0.1
+    - module: RandomNullInjector
+      config:
+        input_column_name: "product_category_id"
+        output_column_name: product_category_id"
+        null_percentage: 0.1
+
+    - module: ImputationModule
+      config:
+        column_name: "product_category_id"
+        imputation_method: "random"
+
+    - module: ImputationModule
+      config:
+        column_name: "marketplace_id"
+        imputation_method: "random"
+
   clean:
     - module: "DropNull"
       config:
@@ -56,8 +79,30 @@ preprocess:
       config:
         input_column_name: "marketplace_id"
         output_column_name: "marketplace_id_encoded"
+    - module: "OneHotEncodingModule"
+      config:
+        input_column_name: "product_category_id"
+        output_column_name: "product_category_id_encoded"
 
   add_features:
+    - module: "CharacterCountModule"
+      config:
+        input_column_name: "review_body"
+        output_column_name: "num_exlamation_marks"
+        characters_to_count: ["!"]
+
+    - module: "CharacterCountModule"
+      config:
+        input_column_name: "review_body"
+        output_column_name: "num_question_marks"
+        characters_to_count: ["?"]
+
+    - module: "CharacterCountModule"
+      config:
+        input_column_name: "review_body"
+        output_column_name: "num_periods"
+        characters_to_count: ["."]
+    
     - module: TextLengthFeature
       config:
         input_column_name: "review_body"
@@ -66,6 +111,9 @@ preprocess:
       config:
         input_column_name: "review_headline"
         output_column_name: "review_headline_length"
+
+  # since inference data may contain missing values, it's best to also let the trainig pipeline get familiar with this.
+
 
     
     # - module: TextSentimentFeature #FIXME: this crashes my laptop atm..
@@ -88,10 +136,13 @@ train:
   module: "TrainPipeline"
   config:
     # the portion to be used for trainining (and validation). The rest for testing
-    train_split: 0.7
+    train_split: 0.9
     features:
+      - "num_exlamation_marks"
+      - "num_question_marks"
+      - "num_periods"
       - "marketplace_id_encoded" 
-      - "product_category_id"
+      - "product_category_id_encoded"
       - "review_body_length"
       - "review_headline_length"
       - "verified_purchase"
@@ -100,7 +151,7 @@ train:
     target: "label"
     grid_search:
       params:
-        numTrees: [10, 20, 100]
+        numTrees: [200]
         maxDepth: [1, 5, 10]
       k: 5
     save_dir: "model"
