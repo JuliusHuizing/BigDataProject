@@ -6,6 +6,7 @@ from modules.Predict.PredictPipeline import PredictPipeline
 import yaml
 import os
 import logging
+from modules.Check.DataQualityCheckModuleFactory import DataQualityCheckModuleFactory
 
 from utils.initialize_modules_from_yaml import load_yaml_file, initialize_classes
 
@@ -31,19 +32,31 @@ if __name__ == "__main__":
         predict_data_loader = DataCollectorFactory.create_module(config["collect"]["module"], config["collect"]["config"])
         logging.info("Data collector for prediction initialized.")
 
+
+        logging.info("Initializing raw data quality check pipeline...")
+        raw_data_quality_check_module = DataQualityCheckModuleFactory\
+            .create_module(config["raw_data_quality_check"]["module"], 
+                           config["raw_data_quality_check"]["config"])
+        logging.info("✅ Raw data quality check pipeline initialized.")
+        
         # Collect prediction data
         logging.info("Collecting data for prediction...")
         dfs = predict_data_loader.collect_data()
         logging.info("✅ Data collected for prediction.")
+        
+     
 
         # Initialize prediction and preprocessing pipeline
-        predict_pipeline = PredictPipeline(config["load_model"]["model_path"])
         
+        predict_pipeline = PredictPipeline(config["load_model"]["model_path"])
         predict_preprocessing_pipeline = initialize_classes(config["preprocess"])
         logging.info("Prediction and preprocessing modules initialized.")
 
         # Process and predict
         for source_file, df in zip(prediction_files, dfs):
+            logging.info("Checking raw data quality...")
+            df = raw_data_quality_check_module.process(df)
+            logging.info("✅ Raw data quality checked.")
             logging.info(f"Processing {source_file} for prediction...")
             for module in predict_preprocessing_pipeline:
                 original_count = df.count()

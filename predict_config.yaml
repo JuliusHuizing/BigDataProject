@@ -5,6 +5,12 @@ collect:
     # we want to keep two dataframes for predictions
     merge: False #FIXME: if this is set to true, saving predictions will fail
 
+raw_data_quality_check:
+  module: "GXDataQualityCheckModule"
+  config:
+    expectation_suite_name: "predictions_raw_data_expectation_suite"
+    continue_after_failure: False
+
 preprocess:
   clean:
     - module: ConvertToBoolean
@@ -22,6 +28,24 @@ preprocess:
         map_non_matches_to: False
 
   add_features:
+    - module: "CharacterCountModule"
+      config:
+        input_column_name: "review_body"
+        output_column_name: "num_exlamation_marks"
+        characters_to_count: ["!"]
+
+    - module: "CharacterCountModule"
+      config:
+        input_column_name: "review_body"
+        output_column_name: "num_question_marks"
+        characters_to_count: ["?"]
+
+    - module: "CharacterCountModule"
+      config:
+        input_column_name: "review_body"
+        output_column_name: "num_periods"
+        characters_to_count: ["."]
+    
     - module: TextLengthFeature
       config:
         input_column_name: "review_body"
@@ -30,6 +54,7 @@ preprocess:
       config:
         input_column_name: "review_headline"
         output_column_name: "review_headline_length"
+   
   
   impute_missing_values:
     - module: ImputationModule
@@ -47,10 +72,10 @@ preprocess:
         input_column_name: "marketplace_id"
         output_column_name: "marketplace_id_encoded"
 
-    # - module: "OneHotEncodingModule"
-    #   config:
-    #     input_column_name: "product_category_id"
-    #     output_column_name: "product_category_id_encoded"
+    - module: "OneHotEncodingModule"
+      config:
+        input_column_name: "product_category_id"
+        output_column_name: "product_category_id_encoded"
 
 load_model:
   model_path: "model"
