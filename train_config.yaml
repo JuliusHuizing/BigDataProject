@@ -83,7 +83,7 @@ train:
     train_split: 0.7
     features:
       # - "marketplace_id" #FIXME: crashes during prediction bc of missing values...
-      # - "product_category_id"
+      # - "product_category_id" #FIXME: same as above
       - "review_body_length"
       - "review_headline_length"
       - "verified_purchase"
