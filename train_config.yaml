@@ -79,10 +79,15 @@ preprocess:
       config:
         input_column_name: "marketplace_id"
         output_column_name: "marketplace_id_encoded"
-    - module: "OneHotEncodingModule"
+    # - module: "OneHotEncodingModule"
+    #   config:
+    #     input_column_name: "product_category_id"
+    #     output_column_name: "product_category_id_encoded"
+    - module: HashingModule
       config:
         input_column_name: "product_category_id"
         output_column_name: "product_category_id_encoded"
+        num_features: 29
 
   add_features:
     - module: "CharacterCountModule"

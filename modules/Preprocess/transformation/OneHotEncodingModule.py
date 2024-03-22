@@ -29,7 +29,7 @@ class OneHotEncodingModule:
         indexed_column_name = f"{self.input_column_name}_indexed"
 
         # Define the stages for the pipeline: indexing and encoding
-        indexer = StringIndexer(inputCol=self.input_column_name, outputCol=indexed_column_name)
+        indexer = StringIndexer(inputCol=self.input_column_name, outputCol=indexed_column_name, handleInvalid='keep')
         encoder = OneHotEncoder(inputCols=[indexed_column_name], outputCols=[self.output_column_name])
         stages = [indexer, encoder]
 
