@@ -12,7 +12,7 @@
   - [Table of Contents](#table-of-contents)
   - [📋 **Overview**](#-overview)
   - [✅ **Features**](#-features)
-  - [⚠️ **Known Issues**](#️-known-issues)
+  - [⚠️ \*\*Known Issues \\ Limitations \*\*](#️-known-issues--limitations-)
   - [📦 **Requirements \& Installation**](#-requirements--installation)
   - [🚀 **Quick Start**](#-quick-start)
   - [🏛️ **Architecture**](#️-architecture)
@@ -54,8 +54,9 @@ However, for users that want add new functionality, ProML also makes it easy to 
 - ### 🛠️ *Designed to Reused, Adapted, and Extended*
   The pipeline is built with adaptability and extensibility at its core, encouraging users to modify and extend it for their specific needs. Whether it's integrating new data sources, applying the pipeline to different machine learning tasks, or enhancing its capabilities with additional features, ProML is designed to support and streamline these processes.
 
-## ⚠️ **Known Issues**
-To be added as encountered and documented.
+## ⚠️ **Known Issues \ Limitations **
+- Currently, the preprocessing pipeline and training pipeline are coupled in the *train_config.yaml* file and *train.py script.* Ideally these two phases should be split into two scripts and configuration files, such that the user can run the pipeline on persisted preprocessed data without needing to rerun all preprocessing steps before every training job. This will enable the user to debug the training phase independtly, as well as make it easier to play with different models for training.
+
 
 ## 📦 **Requirements & Installation**
 

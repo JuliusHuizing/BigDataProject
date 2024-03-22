@@ -9,11 +9,14 @@ from .cleaning.DropNotIn import DropNotIn
 from .cleaning.RenameColumns import RenameColumns
 from .integration.DataJoiner import DataJoiner
 from .imputation.ImputationModule import ImputationModule
+from .transformation.OneHotEncodingModule import OneHotEncodingModule
 
 class PreprocessingModuleFactory:
     @staticmethod
     def create_module(module_name: str, module_config: dict) -> PreprocessingModule:
         try:
+            if module_name == "OneHotEncodingModule":
+                return OneHotEncodingModule(**module_config)
             if module_name == "ImputationModule":
                 return ImputationModule(**module_config)
             if module_name == "DataJoiner":
